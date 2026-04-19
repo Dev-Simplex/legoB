@@ -1,8 +1,15 @@
+import { SceneCanvas } from './scene/SceneCanvas';
+
+const isDev = import.meta.env.DEV;
+
 export function App() {
   return (
-    <main className="app-shell">
-      <h1>LegoB — bootstrapping</h1>
-      <p>Scaffolding complete. Three.js and LDraw pipeline arrive in Stories 1.2 and 1.3.</p>
-    </main>
+    <div className="app-shell">
+      <header className="top-bar">
+        <h1>LegoB</h1>
+        <span className="status">bootstrapping · Story 1.2</span>
+      </header>
+      <SceneCanvas showFps={isDev} />
+    </div>
   );
 }
