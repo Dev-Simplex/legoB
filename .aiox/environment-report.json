@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "project": {
+    "name": "legob",
+    "path": "/Users/ederson.ricieri/Documents/Projetos/legob",
+    "type": "greenfield-fullstack"
+  },
+  "generated_at": "2026-04-19",
+  "generated_by": "aiox-master (on behalf of @devops)",
+  "execution_mode": "yolo",
+  "clis": {
+    "git": { "installed": true, "path": "/usr/bin/git" },
+    "node": { "installed": true, "path": "/opt/homebrew/bin/node", "required_min": "20" },
+    "npm": { "installed": true, "path": "/opt/homebrew/bin/npm" },
+    "gh": { "installed": true, "path": "/opt/homebrew/bin/gh", "version": "2.90.0", "installed_during_bootstrap": true },
+    "supabase": { "installed": false, "skipped_reason": "no_backend" },
+    "railway": { "installed": false, "skipped_reason": "no_backend" }
+  },
+  "auth": {
+    "github": { "status": "pending_user_action", "blocker": "gh auth login is interactive" },
+    "supabase": { "status": "skipped" },
+    "railway": { "status": "skipped" }
+  },
+  "git": {
+    "initialized": true,
+    "default_branch": "main",
+    "initial_commit_sha": "6344336",
+    "author_identity_source": "env_vars (GIT_AUTHOR_*)",
+    "global_config_modified": false
+  },
+  "remote": {
+    "github_repo_created": false,
+    "status": "pending_user_auth"
+  },
+  "scaffold": {
+    "created": [
+      ".aiox/config.yaml",
+      ".gitignore",
+      "README.md",
+      "package.json",
+      "docs/",
+      ".github/workflows/"
+    ]
+  },
+  "next_steps": [
+    "User runs `gh auth login` interactively",
+    "`gh repo create legob --private --source=. --remote=origin --push`",
+    "Phase 1 begins with @analyst creating docs/project-brief.md"
+  ]
+}
