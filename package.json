@@ -1,0 +1,26 @@
+{
+  "name": "legob",
+  "version": "0.0.0",
+  "private": true,
+  "description": "LegoB — 3D Lego assembly game (web, WebGL, LDraw-compatible, local-only)",
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'TODO: configure dev server (vite recommended) after @architect finalizes stack'",
+    "build": "echo 'TODO: configure build'",
+    "test": "echo 'TODO: configure test runner'",
+    "lint": "echo 'TODO: configure linter'"
+  },
+  "keywords": [
+    "lego",
+    "ldraw",
+    "three.js",
+    "webgl",
+    "game",
+    "3d"
+  ],
+  "author": "",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  }
+}

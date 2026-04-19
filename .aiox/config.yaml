@@ -1,0 +1,42 @@
+project:
+  name: legob
+  display_name: LegoB
+  type: greenfield-fullstack
+  created: 2026-04-19
+  aiox_version: "3.0"
+
+scope:
+  platform: web
+  rendering: webgl
+  preferred_renderer: three.js
+  modes:
+    - sandbox
+    - instructions
+  piece_source: ldraw
+  backend: none
+  persistence: local
+
+workflow:
+  active: greenfield-fullstack
+  phase: 1
+  phase_name: discovery-and-planning
+  next_step: analyst-project-brief
+
+agents:
+  orchestrator: aiox-master
+  planning:
+    - analyst
+    - pm
+    - ux-design-expert
+    - architect
+    - po
+  development:
+    - sm
+    - dev
+    - qa
+
+paths:
+  docs: docs/
+  sharded_prd: docs/prd/
+  sharded_architecture: docs/architecture/
+  stories: docs/stories/
