@@ -50,3 +50,6 @@ assets/ldraw/
 # AIOX runtime
 .aiox/environment-report.json.bak
 .aiox/cache/
+
+# TypeScript build info
+*.tsbuildinfo
