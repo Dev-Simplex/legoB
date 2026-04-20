@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import type { Part, Scene } from '../types/domain';
+import type { Part, Scene, Step } from '../types/domain';
 import { getPalette } from '../data/palette';
 
 /**
@@ -63,8 +63,19 @@ export interface ImportResult {
 export function readMpd(text: string, nameFromFile: string): ImportResult {
   const lines = text.split(/\r?\n/);
   const parts: Part[] = [];
+  const steps: Step[] = [];
   const warnings: ImportResult['warnings'] = [];
   let embeddedName: string | null = null;
+  let currentStepIndex = 0;
+  let currentStepPartIds: string[] = [];
+  let hasStepMarkers = false;
+
+  const flushStep = () => {
+    if (currentStepPartIds.length === 0) return;
+    steps.push({ index: currentStepIndex, partIds: [...currentStepPartIds], rotationHint: null });
+    currentStepPartIds = [];
+    currentStepIndex += 1;
+  };
 
   for (const rawLine of lines) {
     const line = rawLine.trim();
@@ -73,6 +84,10 @@ export function readMpd(text: string, nameFromFile: string): ImportResult {
     if (first === '0') {
       const nameMatch = line.match(/^0\s+Name:\s*(.+)$/i);
       if (nameMatch) embeddedName = nameMatch[1].trim();
+      if (/^0\s+STEP\b/i.test(line)) {
+        hasStepMarkers = true;
+        flushStep();
+      }
       continue;
     }
     if (first !== '1') continue;
@@ -111,14 +126,30 @@ export function readMpd(text: string, nameFromFile: string): ImportResult {
       resolvedPartNumber = '3003';
     }
 
+    const partId = nanoid();
     parts.push({
-      id: nanoid(),
+      id: partId,
       partNumber: resolvedPartNumber,
       colorCode: Number.isFinite(colorCode) ? colorCode : 16,
       position: [x, y, z],
       rotationY,
-      stepIndex: null,
+      stepIndex: currentStepIndex,
     });
+    currentStepPartIds.push(partId);
+  }
+
+  // Final implicit step for any trailing parts after the last explicit STEP.
+  if (currentStepPartIds.length > 0 && hasStepMarkers) {
+    flushStep();
+  }
+
+  // If no STEP markers were present, the file is a single-scene sandbox import
+  // rather than instructions. Null out stepIndex so the playback UI doesn't
+  // pretend the scene is stepped.
+  if (!hasStepMarkers) {
+    for (let i = 0; i < parts.length; i++) {
+      parts[i] = { ...parts[i]!, stepIndex: null };
+    }
   }
 
   const now = Date.now();
@@ -127,8 +158,8 @@ export function readMpd(text: string, nameFromFile: string): ImportResult {
       id: nanoid(),
       name: embeddedName ?? nameFromFile.replace(/\.(mpd|ldr)$/i, '') ?? 'Imported',
       parts,
-      steps: [],
-      mode: 'sandbox',
+      steps,
+      mode: hasStepMarkers ? 'instructions' : 'sandbox',
       createdAt: now,
       updatedAt: now,
       thumbnail: null,

@@ -60,4 +60,27 @@ describe('mpdCodec', () => {
     expect(scene.parts[0]?.partNumber).toBe('3003');
     expect(warnings[0]?.code).toBe('unknown_part');
   });
+
+  it('parses 0 STEP markers into discrete steps', () => {
+    const text = [
+      '0 FILE demo.ldr',
+      '1 4 0 0 0 1 0 0 0 1 0 0 0 1 3003.dat',
+      '0 STEP',
+      '1 14 0 24 0 1 0 0 0 1 0 0 0 1 3001.dat',
+      '1 1 0 48 0 1 0 0 0 1 0 0 0 1 3003.dat',
+      '0 STEP',
+      '1 15 0 72 0 1 0 0 0 1 0 0 0 1 3024.dat',
+      '0 STEP',
+      '0 NOFILE',
+    ].join('\n');
+    const { scene } = readMpd(text, 'demo.mpd');
+    expect(scene.mode).toBe('instructions');
+    expect(scene.steps).toHaveLength(3);
+    expect(scene.steps[0]?.partIds).toHaveLength(1);
+    expect(scene.steps[1]?.partIds).toHaveLength(2);
+    expect(scene.steps[2]?.partIds).toHaveLength(1);
+    expect(scene.parts[0]?.stepIndex).toBe(0);
+    expect(scene.parts[1]?.stepIndex).toBe(1);
+    expect(scene.parts[3]?.stepIndex).toBe(2);
+  });
 });

@@ -1,0 +1,30 @@
+0 FILE little-house-steps.ldr
+0 Name: Little House
+0 Author: LegoB samples
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+0
+0 // Step 1 — lay the floor
+1 71 0 0 0 1 0 0 0 1 0 0 0 1 3020.dat
+0 STEP
+0
+0 // Step 2 — four red corner bricks
+1 4 -20 8 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 4 20 8 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 4 -20 8 20 1 0 0 0 1 0 0 0 1 3003.dat
+1 4 20 8 20 1 0 0 0 1 0 0 0 1 3003.dat
+0 STEP
+0
+0 // Step 3 — two yellow long bricks for the wall courses
+1 14 0 32 -20 1 0 0 0 1 0 0 0 1 3001.dat
+1 14 0 32 20 1 0 0 0 1 0 0 0 1 3001.dat
+0 STEP
+0
+0 // Step 4 — blue roof bricks
+1 1 -10 56 0 0 0 1 0 1 0 -1 0 0 3004.dat
+1 1 10 56 0 0 0 1 0 1 0 -1 0 0 3004.dat
+0 STEP
+0
+0 // Step 5 — a decorative white 1x1 plate on top
+1 15 0 80 0 1 0 0 0 1 0 0 0 1 3024.dat
+0 STEP
+0 NOFILE

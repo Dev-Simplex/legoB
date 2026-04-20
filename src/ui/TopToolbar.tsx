@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSceneStore } from '../state/useSceneStore';
+import { useModeStore } from '../state/useModeStore';
 import { sceneRepo } from '../io/sceneRepo';
 import { writeMpd, readMpd } from '../io/mpdCodec';
 import { downloadText, openFilePicker } from '../io/fileIo';
@@ -12,6 +13,9 @@ export function TopToolbar() {
   const resetScene = useSceneStore((s) => s.resetScene);
   const isDirty = useSceneStore((s) => s.isDirty);
   const markClean = useSceneStore((s) => s.markClean);
+  const mode = useModeStore((s) => s.mode);
+  const setMode = useModeStore((s) => s.setMode);
+  const hasSteps = scene.steps.length > 0;
   const partCount = scene.parts.length;
   const [savesOpen, setSavesOpen] = useState(false);
 
@@ -47,12 +51,9 @@ export function TopToolbar() {
     }
   };
 
-  const handleImport = async () => {
-    if (isDirty && !window.confirm('Discard unsaved changes before importing?')) return;
-    const file = await openFilePicker();
-    if (!file) return;
+  const loadFromText = (fileName: string, text: string) => {
     try {
-      const { scene: imported, warnings } = readMpd(file.text, file.name);
+      const { scene: imported, warnings } = readMpd(text, fileName);
       loadScene(imported);
       if (warnings.length > 0) {
         toast(
@@ -61,7 +62,7 @@ export function TopToolbar() {
         );
         warnings.forEach((w) => console.warn(`[import ${w.code}]`, w.message));
       } else {
-        toast(`Imported ${imported.parts.length} bricks from ${file.name}`, 'success');
+        toast(`Imported ${imported.parts.length} bricks from ${fileName}`, 'success');
       }
     } catch (err) {
       toast(
@@ -69,6 +70,28 @@ export function TopToolbar() {
         'error'
       );
     }
+  };
+
+  const handleLoadSample = async () => {
+    if (isDirty && !window.confirm('Discard unsaved changes before loading a sample?')) return;
+    try {
+      const res = await fetch('/samples/little-house-steps.mpd');
+      if (!res.ok) throw new Error(`Fetch ${res.status}`);
+      const text = await res.text();
+      loadFromText('little-house-steps.mpd', text);
+    } catch (err) {
+      toast(
+        err instanceof Error ? `Sample load failed: ${err.message}` : 'Sample load failed',
+        'error'
+      );
+    }
+  };
+
+  const handleImport = async () => {
+    if (isDirty && !window.confirm('Discard unsaved changes before importing?')) return;
+    const file = await openFilePicker();
+    if (!file) return;
+    loadFromText(file.name, file.text);
   };
 
   const handleClear = () => {
@@ -81,7 +104,28 @@ export function TopToolbar() {
     <>
       <header className="top-bar">
         <h1>LegoB</h1>
-        <span className="status">Sandbox</span>
+        <div className="mode-toggle" role="tablist" aria-label="Mode">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === 'sandbox'}
+            className={mode === 'sandbox' ? 'active' : ''}
+            onClick={() => setMode('sandbox')}
+          >
+            Sandbox
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === 'instructions'}
+            className={mode === 'instructions' ? 'active' : ''}
+            onClick={() => setMode('instructions')}
+            disabled={!hasSteps}
+            title={!hasSteps ? 'Import a stepped .mpd to enable Instructions mode' : undefined}
+          >
+            Instructions
+          </button>
+        </div>
         <div className="top-bar-spacer" />
         <span className="stat-chip" aria-label={`${partCount} bricks in scene`}>
           {partCount} bricks
@@ -95,6 +139,9 @@ export function TopToolbar() {
         </button>
         <button type="button" onClick={handleImport} aria-label="Import .mpd file">
           Open
+        </button>
+        <button type="button" onClick={handleLoadSample} aria-label="Load bundled sample">
+          Sample
         </button>
         <button type="button" onClick={handleExport} aria-label="Export as .mpd">
           Export
