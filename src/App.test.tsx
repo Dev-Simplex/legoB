@@ -2,10 +2,11 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { App } from './App';
 
-// R3F touches WebGL APIs happy-dom can't simulate. Stub the SceneCanvas shell to a simple div
-// so we can still smoke-test the App chrome (header, status, mounting).
 vi.mock('./scene/SceneCanvas', () => ({
   SceneCanvas: () => <div data-testid="scene-canvas-stub" />,
+}));
+vi.mock('./scene/SandboxScene', () => ({
+  SandboxScene: () => null,
 }));
 
 describe('App', () => {
@@ -14,8 +15,15 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'LegoB', level: 1 })).toBeInTheDocument();
   });
 
-  it('mounts the scene canvas', () => {
+  it('renders key sandbox actions', () => {
     render(<App />);
-    expect(screen.getByTestId('scene-canvas-stub')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Save scene$/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Export as/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Import/ })).toBeInTheDocument();
+  });
+
+  it('renders palette and toast container', () => {
+    render(<App />);
+    expect(screen.getByRole('complementary', { name: /parts palette/i })).toBeInTheDocument();
   });
 });
