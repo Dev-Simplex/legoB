@@ -10,7 +10,7 @@ import { LDU_BRICK_HEIGHT, LDU_PLATE_HEIGHT } from '../types/domain';
 export const PALETTE: readonly PaletteEntry[] = [
   {
     partNumber: '3005',
-    displayName: '1x1 Brick',
+    displayName: 'Tijolo 1x1',
     category: 'brick',
     widthStuds: 1,
     depthStuds: 1,
@@ -20,7 +20,7 @@ export const PALETTE: readonly PaletteEntry[] = [
   },
   {
     partNumber: '3004',
-    displayName: '1x2 Brick',
+    displayName: 'Tijolo 1x2',
     category: 'brick',
     widthStuds: 1,
     depthStuds: 2,
@@ -30,7 +30,7 @@ export const PALETTE: readonly PaletteEntry[] = [
   },
   {
     partNumber: '3003',
-    displayName: '2x2 Brick',
+    displayName: 'Tijolo 2x2',
     category: 'brick',
     widthStuds: 2,
     depthStuds: 2,
@@ -40,7 +40,7 @@ export const PALETTE: readonly PaletteEntry[] = [
   },
   {
     partNumber: '3001',
-    displayName: '2x4 Brick',
+    displayName: 'Tijolo 2x4',
     category: 'brick',
     widthStuds: 2,
     depthStuds: 4,
@@ -50,7 +50,7 @@ export const PALETTE: readonly PaletteEntry[] = [
   },
   {
     partNumber: '3024',
-    displayName: '1x1 Plate',
+    displayName: 'Placa 1x1',
     category: 'plate',
     widthStuds: 1,
     depthStuds: 1,
@@ -60,7 +60,7 @@ export const PALETTE: readonly PaletteEntry[] = [
   },
   {
     partNumber: '3023',
-    displayName: '1x2 Plate',
+    displayName: 'Placa 1x2',
     category: 'plate',
     widthStuds: 1,
     depthStuds: 2,
@@ -70,7 +70,7 @@ export const PALETTE: readonly PaletteEntry[] = [
   },
   {
     partNumber: '3022',
-    displayName: '2x2 Plate',
+    displayName: 'Placa 2x2',
     category: 'plate',
     widthStuds: 2,
     depthStuds: 2,
@@ -80,7 +80,7 @@ export const PALETTE: readonly PaletteEntry[] = [
   },
   {
     partNumber: '3020',
-    displayName: '2x4 Plate',
+    displayName: 'Placa 2x4',
     category: 'plate',
     widthStuds: 2,
     depthStuds: 4,
@@ -90,7 +90,7 @@ export const PALETTE: readonly PaletteEntry[] = [
   },
   {
     partNumber: '3070',
-    displayName: '1x1 Tile',
+    displayName: 'Lisa 1x1',
     category: 'tile',
     widthStuds: 1,
     depthStuds: 1,
@@ -100,7 +100,7 @@ export const PALETTE: readonly PaletteEntry[] = [
   },
   {
     partNumber: '3069',
-    displayName: '1x2 Tile',
+    displayName: 'Lisa 1x2',
     category: 'tile',
     widthStuds: 1,
     depthStuds: 2,

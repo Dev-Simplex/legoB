@@ -23,7 +23,7 @@ export function PropertiesPanel() {
   };
 
   return (
-    <aside className="properties-panel" aria-label="Selected brick properties">
+    <aside className="properties-panel" aria-label="Propriedades da peça selecionada">
       <header>
         <h2>{entry.displayName}</h2>
         <span className="part-number">#{selectedPart.partNumber}</span>
@@ -31,37 +31,37 @@ export function PropertiesPanel() {
 
       <dl className="prop-list">
         <div>
-          <dt>Position</dt>
+          <dt>Posição</dt>
           <dd>
             x:{selectedPart.position[0]} · y:{selectedPart.position[1]} · z:{selectedPart.position[2]}
           </dd>
         </div>
         <div>
-          <dt>Rotation</dt>
+          <dt>Rotação</dt>
           <dd>{selectedPart.rotationY}°</dd>
         </div>
       </dl>
 
       <div className="prop-actions">
-        <button type="button" onClick={() => rotate(-1)} aria-label="Rotate counter-clockwise">
+        <button type="button" onClick={() => rotate(-1)} aria-label="Girar no sentido anti-horário">
           ⟲ -90°
         </button>
-        <button type="button" onClick={() => rotate(1)} aria-label="Rotate clockwise">
+        <button type="button" onClick={() => rotate(1)} aria-label="Girar no sentido horário">
           ⟳ +90°
         </button>
         <button
           type="button"
           className="destructive"
           onClick={() => removePart(selectedPart.id)}
-          aria-label="Delete brick"
+          aria-label="Excluir peça"
         >
-          Delete
+          Excluir
         </button>
       </div>
 
       <div className="prop-colors">
-        <h3>Color</h3>
-        <div className="palette-color-grid" role="listbox" aria-label="Change color">
+        <h3>Cor</h3>
+        <div className="palette-color-grid" role="listbox" aria-label="Alterar cor">
           {COLORS.slice(0, 20).map((c) => (
             <button
               key={c.code}
@@ -71,7 +71,7 @@ export function PropertiesPanel() {
               className={`palette-color ${selectedPart.colorCode === c.code ? 'active' : ''}`}
               style={{ backgroundColor: c.rgb, opacity: c.material === 'transparent' ? 0.6 : 1 }}
               onClick={() => updatePart(selectedPart.id, { colorCode: c.code })}
-              aria-label={`${c.name}, code ${c.code}`}
+              aria-label={`${c.name}, código ${c.code}`}
               title={`${c.name} (${c.code})`}
             />
           ))}
@@ -79,7 +79,7 @@ export function PropertiesPanel() {
       </div>
 
       <p className="keyboard-hint">
-        <kbd>R</kbd> rotate · <kbd>Shift</kbd>+<kbd>R</kbd> rotate back · <kbd>Del</kbd> delete
+        <kbd>R</kbd> girar · <kbd>Shift</kbd>+<kbd>R</kbd> girar inverso · <kbd>Del</kbd> excluir
       </p>
     </aside>
   );

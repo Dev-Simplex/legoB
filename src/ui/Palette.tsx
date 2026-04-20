@@ -6,10 +6,10 @@ import { useSceneStore } from '../state/useSceneStore';
 import type { BrickCategory } from '../types/domain';
 
 const CATEGORIES: Array<{ key: BrickCategory | 'all'; label: string }> = [
-  { key: 'all', label: 'All' },
-  { key: 'brick', label: 'Bricks' },
-  { key: 'plate', label: 'Plates' },
-  { key: 'tile', label: 'Tiles' },
+  { key: 'all', label: 'Todas' },
+  { key: 'brick', label: 'Tijolos' },
+  { key: 'plate', label: 'Placas' },
+  { key: 'tile', label: 'Lisas' },
 ];
 
 export function Palette() {
@@ -37,15 +37,15 @@ export function Palette() {
   }, [searchQuery, category]);
 
   return (
-    <aside className="palette" aria-label="Parts palette">
+    <aside className="palette" aria-label="Paleta de peças">
       <div className="palette-header">
-        <h2>Parts</h2>
+        <h2>Peças</h2>
         <input
           type="search"
-          placeholder="Search"
+          placeholder="Buscar"
           value={searchQuery}
           onChange={(e) => setSearch(e.target.value)}
-          aria-label="Search parts"
+          aria-label="Buscar peças"
         />
       </div>
 
@@ -64,7 +64,7 @@ export function Palette() {
         ))}
       </div>
 
-      <div className="palette-grid" role="listbox" aria-label="Available parts">
+      <div className="palette-grid" role="listbox" aria-label="Peças disponíveis">
         {filtered.map((p) => (
           <button
             key={p.partNumber}
@@ -91,8 +91,8 @@ export function Palette() {
       </div>
 
       <div className="palette-colors">
-        <h3>Color</h3>
-        <div className="palette-color-grid" role="listbox" aria-label="LDraw colors">
+        <h3>Cor</h3>
+        <div className="palette-color-grid" role="listbox" aria-label="Cores LDraw">
           {COLORS.slice(0, 20).map((c) => (
             <button
               key={c.code}
@@ -108,7 +108,7 @@ export function Palette() {
                 }
               }}
               title={`${c.name} (${c.code})`}
-              aria-label={`${c.name}, LDraw code ${c.code}`}
+              aria-label={`${c.name}, código LDraw ${c.code}`}
             />
           ))}
         </div>

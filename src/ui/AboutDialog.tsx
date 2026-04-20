@@ -11,72 +11,73 @@ export function AboutDialog({ open, onClose }: AboutDialogProps) {
       className="modal-backdrop"
       role="dialog"
       aria-modal="true"
-      aria-label="About LegoB"
+      aria-label="Sobre o LegoB"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
     >
       <div className="modal about-modal">
         <header className="modal-header">
-          <h2>About LegoB</h2>
-          <button type="button" onClick={onClose} aria-label="Close dialog">
+          <h2>Sobre o LegoB</h2>
+          <button type="button" onClick={onClose} aria-label="Fechar diálogo">
             ×
           </button>
         </header>
 
         <div className="modal-body">
           <p>
-            <strong>LegoB</strong> is a browser-based 3D brick assembly game. Build freely in the
-            sandbox, or step through an instruction set. Everything runs client-side — no account,
-            no backend, your creations stay on this device.
+            <strong>LegoB</strong> é um jogo de montagem 3D de peças no navegador. Construa
+            livremente no modo <em>Livre</em> ou siga passo a passo no modo <em>Instruções</em>.
+            Tudo roda no próprio navegador — sem conta, sem servidor, suas criações ficam
+            guardadas apenas neste dispositivo.
           </p>
 
-          <h3>Keyboard shortcuts</h3>
+          <h3>Atalhos de teclado</h3>
           <dl className="shortcut-list">
             <dt><kbd>Esc</kbd></dt>
-            <dd>Deselect / clear active palette part</dd>
+            <dd>Desselecionar / limpar peça ativa da paleta</dd>
             <dt><kbd>R</kbd> / <kbd>Shift</kbd>+<kbd>R</kbd></dt>
-            <dd>Rotate selected brick clockwise / counter-clockwise</dd>
+            <dd>Girar peça selecionada no sentido horário / anti-horário</dd>
             <dt><kbd>Del</kbd> / <kbd>Backspace</kbd></dt>
-            <dd>Delete selected brick</dd>
+            <dd>Excluir peça selecionada</dd>
             <dt><kbd>←</kbd> / <kbd>→</kbd></dt>
-            <dd>Previous / next instruction step</dd>
-            <dt><kbd>Space</kbd></dt>
-            <dd>Play / pause instruction playback</dd>
+            <dd>Passo anterior / próximo nas instruções</dd>
+            <dt><kbd>Espaço</kbd></dt>
+            <dd>Reproduzir / pausar as instruções</dd>
             <dt><kbd>Home</kbd> / <kbd>End</kbd></dt>
-            <dd>First / last instruction step</dd>
+            <dd>Primeiro / último passo das instruções</dd>
             <dt><kbd>G</kbd></dt>
-            <dd>Toggle ghost preview in Instructions mode</dd>
+            <dd>Alternar prévia fantasma no modo Instruções</dd>
           </dl>
 
-          <h3>Attribution</h3>
+          <h3>Atribuição</h3>
           <p>
-            Brick geometry and color codes follow the{' '}
+            A geometria das peças e os códigos de cor seguem a especificação do{' '}
             <a href="https://www.ldraw.org/" target="_blank" rel="noreferrer">
               LDraw.org
-            </a>{' '}
-            specification. The LDraw Parts Library is distributed under the{' '}
+            </a>
+            . A Biblioteca de Peças LDraw é distribuída sob a{' '}
             <a
               href="https://www.ldraw.org/article/398.html"
               target="_blank"
               rel="noreferrer"
             >
-              Creative Commons Attribution 2.0 license (CCAL 2.0)
+              Licença Creative Commons Attribution 2.0 (CCAL 2.0)
             </a>
             .
           </p>
 
-          <h3>Not affiliated with LEGO Group</h3>
+          <h3>Não afiliado ao LEGO Group</h3>
           <p>
-            LegoB is an <strong>unofficial fan project</strong>. It is NOT affiliated with, endorsed
-            by, or sponsored by the LEGO Group. "LEGO" is a registered trademark of the LEGO Group.
-            The codename "LegoB" is internal only and subject to change.
+            LegoB é um <strong>projeto não oficial feito por fãs</strong>. NÃO é afiliado,
+            endossado ou patrocinado pelo LEGO Group. "LEGO" é marca registrada do LEGO Group.
+            O codinome "LegoB" é interno e pode mudar.
           </p>
 
-          <h3>Privacy</h3>
+          <h3>Privacidade</h3>
           <p>
-            No personal data is collected. No trackers. All saves live in your browser's IndexedDB
-            and can be deleted from the "My Saves" dialog at any time.
+            Nenhum dado pessoal é coletado. Sem rastreadores. Todos os salvos ficam no IndexedDB
+            do seu navegador e podem ser apagados a qualquer momento no diálogo "Meus salvos".
           </p>
         </div>
       </div>

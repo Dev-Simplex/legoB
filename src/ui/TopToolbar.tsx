@@ -8,6 +8,8 @@ import { toast } from './toast';
 import { SavesDialog } from './SavesDialog';
 import { AboutDialog } from './AboutDialog';
 
+const UNTITLED = 'Sem título';
+
 export function TopToolbar() {
   const scene = useSceneStore((s) => s.scene);
   const loadScene = useSceneStore((s) => s.loadScene);
@@ -23,8 +25,8 @@ export function TopToolbar() {
 
   const handleSave = async () => {
     let name = scene.name;
-    if (name === 'Untitled') {
-      const entered = window.prompt('Name your creation:', 'My Build');
+    if (name === 'Untitled' || name === UNTITLED) {
+      const entered = window.prompt('Nomeie sua criação:', 'Minha construção');
       if (!entered) return;
       name = entered;
     }
@@ -32,10 +34,10 @@ export function TopToolbar() {
       await sceneRepo.save({ ...scene, name });
       loadScene({ ...scene, name });
       markClean();
-      toast(`Saved as "${name}"`, 'success');
+      toast(`Salvo como "${name}"`, 'success');
     } catch (err) {
       toast(
-        err instanceof Error ? `Save failed: ${err.message}` : 'Save failed',
+        err instanceof Error ? `Falha ao salvar: ${err.message}` : 'Falha ao salvar',
         'error'
       );
     }
@@ -43,13 +45,16 @@ export function TopToolbar() {
 
   const handleExport = async () => {
     const text = writeMpd(scene);
-    const safeName = scene.name.replace(/[^\w\-. ]/g, '_') || 'untitled';
+    const safeName = scene.name.replace(/[^\w\-. ]/g, '_') || 'sem-titulo';
     try {
       const result = await downloadText(text, `${safeName}.mpd`);
       if (result === 'cancelled') return;
-      toast('Exported .mpd file', 'success');
+      toast('Arquivo .mpd exportado', 'success');
     } catch (err) {
-      toast(err instanceof Error ? `Export failed: ${err.message}` : 'Export failed', 'error');
+      toast(
+        err instanceof Error ? `Falha na exportação: ${err.message}` : 'Falha na exportação',
+        'error'
+      );
     }
   };
 
@@ -59,23 +64,24 @@ export function TopToolbar() {
       loadScene(imported);
       if (warnings.length > 0) {
         toast(
-          `Imported with ${warnings.length} warning${warnings.length === 1 ? '' : 's'}. See console.`,
+          `Importado com ${warnings.length} aviso${warnings.length === 1 ? '' : 's'}. Veja o console.`,
           'warning'
         );
-        warnings.forEach((w) => console.warn(`[import ${w.code}]`, w.message));
+        warnings.forEach((w) => console.warn(`[importação ${w.code}]`, w.message));
       } else {
-        toast(`Imported ${imported.parts.length} bricks from ${fileName}`, 'success');
+        toast(`Importadas ${imported.parts.length} peças de ${fileName}`, 'success');
       }
     } catch (err) {
       toast(
-        err instanceof Error ? `Import failed: ${err.message}` : 'Import failed',
+        err instanceof Error ? `Falha na importação: ${err.message}` : 'Falha na importação',
         'error'
       );
     }
   };
 
   const handleLoadSample = async () => {
-    if (isDirty && !window.confirm('Discard unsaved changes before loading a sample?')) return;
+    if (isDirty && !window.confirm('Descartar alterações não salvas antes de carregar o exemplo?'))
+      return;
     try {
       const res = await fetch('/samples/little-house-steps.mpd');
       if (!res.ok) throw new Error(`Fetch ${res.status}`);
@@ -83,21 +89,23 @@ export function TopToolbar() {
       loadFromText('little-house-steps.mpd', text);
     } catch (err) {
       toast(
-        err instanceof Error ? `Sample load failed: ${err.message}` : 'Sample load failed',
+        err instanceof Error
+          ? `Falha ao carregar o exemplo: ${err.message}`
+          : 'Falha ao carregar o exemplo',
         'error'
       );
     }
   };
 
   const handleImport = async () => {
-    if (isDirty && !window.confirm('Discard unsaved changes before importing?')) return;
+    if (isDirty && !window.confirm('Descartar alterações não salvas antes de importar?')) return;
     const file = await openFilePicker();
     if (!file) return;
     loadFromText(file.name, file.text);
   };
 
   const handleClear = () => {
-    if (!isDirty || window.confirm('Discard all bricks and start over?')) {
+    if (!isDirty || window.confirm('Descartar todas as peças e começar de novo?')) {
       resetScene();
     }
   };
@@ -106,7 +114,7 @@ export function TopToolbar() {
     <>
       <header className="top-bar">
         <h1>LegoB</h1>
-        <div className="mode-toggle" role="tablist" aria-label="Mode">
+        <div className="mode-toggle" role="tablist" aria-label="Modo">
           <button
             type="button"
             role="tab"
@@ -114,7 +122,7 @@ export function TopToolbar() {
             className={mode === 'sandbox' ? 'active' : ''}
             onClick={() => setMode('sandbox')}
           >
-            Sandbox
+            Livre
           </button>
           <button
             type="button"
@@ -123,36 +131,40 @@ export function TopToolbar() {
             className={mode === 'instructions' ? 'active' : ''}
             onClick={() => setMode('instructions')}
             disabled={!hasSteps}
-            title={!hasSteps ? 'Import a stepped .mpd to enable Instructions mode' : undefined}
+            title={
+              !hasSteps
+                ? 'Importe um .mpd com passos para habilitar o modo Instruções'
+                : undefined
+            }
           >
-            Instructions
+            Instruções
           </button>
         </div>
         <div className="top-bar-spacer" />
-        <span className="stat-chip" aria-label={`${partCount} bricks in scene`}>
-          {partCount} bricks
+        <span className="stat-chip" aria-label={`${partCount} peças na cena`}>
+          {partCount} {partCount === 1 ? 'peça' : 'peças'}
         </span>
-        {isDirty && <span className="stat-chip dirty">● unsaved</span>}
-        <button type="button" onClick={handleSave} aria-label="Save scene">
-          Save
+        {isDirty && <span className="stat-chip dirty">● não salvo</span>}
+        <button type="button" onClick={handleSave} aria-label="Salvar cena">
+          Salvar
         </button>
-        <button type="button" onClick={() => setSavesOpen(true)} aria-label="Open my saves">
-          My Saves
+        <button type="button" onClick={() => setSavesOpen(true)} aria-label="Abrir meus salvos">
+          Meus salvos
         </button>
-        <button type="button" onClick={handleImport} aria-label="Import .mpd file">
-          Open
+        <button type="button" onClick={handleImport} aria-label="Importar arquivo .mpd">
+          Abrir
         </button>
-        <button type="button" onClick={handleLoadSample} aria-label="Load bundled sample">
-          Sample
+        <button type="button" onClick={handleLoadSample} aria-label="Carregar exemplo incluído">
+          Exemplo
         </button>
-        <button type="button" onClick={handleExport} aria-label="Export as .mpd">
-          Export
+        <button type="button" onClick={handleExport} aria-label="Exportar como .mpd">
+          Exportar
         </button>
-        <button type="button" onClick={handleClear} aria-label="Clear scene">
-          Clear
+        <button type="button" onClick={handleClear} aria-label="Limpar cena">
+          Limpar
         </button>
-        <button type="button" onClick={() => setAboutOpen(true)} aria-label="About">
-          About
+        <button type="button" onClick={() => setAboutOpen(true)} aria-label="Sobre">
+          Sobre
         </button>
       </header>
 

@@ -15,15 +15,15 @@ describe('App', () => {
     expect(screen.getByRole('heading', { name: 'LegoB', level: 1 })).toBeInTheDocument();
   });
 
-  it('renders key sandbox actions', () => {
+  it('renders key sandbox actions in pt-BR', () => {
     render(<App />);
-    expect(screen.getByRole('button', { name: /^Save scene$/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Export as/ })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Import/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Salvar cena/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Exportar como/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Importar arquivo/ })).toBeInTheDocument();
   });
 
   it('renders palette and toast container', () => {
     render(<App />);
-    expect(screen.getByRole('complementary', { name: /parts palette/i })).toBeInTheDocument();
+    expect(screen.getByRole('complementary', { name: /paleta de peças/i })).toBeInTheDocument();
   });
 });

@@ -29,18 +29,18 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="error-screen" role="alert">
           <div className="error-panel">
-            <h1>Something went wrong</h1>
+            <h1>Algo deu errado</h1>
             <p>
-              LegoB hit an unexpected error. Your saved builds are preserved in browser storage.
-              Reloading usually resolves the issue.
+              O LegoB encontrou um erro inesperado. Suas construções salvas estão preservadas no
+              armazenamento do navegador. Recarregar geralmente resolve.
             </p>
             <details>
-              <summary>Technical details</summary>
+              <summary>Detalhes técnicos</summary>
               <pre>{this.state.error.message}</pre>
             </details>
             <div className="error-actions">
               <button type="button" onClick={this.reset}>
-                Reload
+                Recarregar
               </button>
             </div>
           </div>

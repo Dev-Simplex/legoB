@@ -66,8 +66,8 @@ export function TransportBar() {
     return (
       <footer className="transport-bar">
         <span className="transport-empty">
-          No <code>0 STEP</code> markers found in this scene. Import a stepped .mpd to use instruction
-          playback.
+          Nenhum marcador <code>0 STEP</code> encontrado nesta cena. Importe um .mpd com passos
+          para usar a reprodução por instruções.
         </span>
       </footer>
     );
@@ -79,11 +79,13 @@ export function TransportBar() {
 
   return (
     <div className="instructions-layout">
-      <aside className="step-sidebar" aria-label="Parts for this step">
+      <aside className="step-sidebar" aria-label="Peças deste passo">
         <header>
-          <h2>Step {currentStep + 1} of {steps.length}</h2>
+          <h2>
+            Passo {currentStep + 1} de {steps.length}
+          </h2>
           <p className="muted">
-            {usedSoFar} / {parts.length} parts used
+            {usedSoFar} / {parts.length} peças usadas
           </p>
         </header>
 
@@ -106,7 +108,7 @@ export function TransportBar() {
             );
           })}
           {thisStepParts.length === 0 && (
-            <li className="muted">No parts in this step.</li>
+            <li className="muted">Nenhuma peça neste passo.</li>
           )}
         </ul>
 
@@ -116,25 +118,30 @@ export function TransportBar() {
               type="checkbox"
               checked={ghost}
               onChange={toggleGhost}
-              aria-label="Ghost preview of next step"
+              aria-label="Prévia fantasma do próximo passo"
             />
-            Ghost preview (G)
+            Prévia fantasma (G)
           </label>
         </div>
       </aside>
 
       <footer className="transport-bar">
         <div className="transport-controls">
-          <button type="button" onClick={() => jumpTo(0)} aria-label="Go to first step">
+          <button type="button" onClick={() => jumpTo(0)} aria-label="Ir para o primeiro passo">
             ⏮
           </button>
-          <button type="button" onClick={prev} aria-label="Previous step" disabled={currentStep === 0}>
+          <button
+            type="button"
+            onClick={prev}
+            aria-label="Passo anterior"
+            disabled={currentStep === 0}
+          >
             ◀
           </button>
           <button
             type="button"
             onClick={() => (playing ? pause() : play())}
-            aria-label={playing ? 'Pause playback' : 'Play playback'}
+            aria-label={playing ? 'Pausar reprodução' : 'Reproduzir'}
             className="primary"
           >
             {playing ? '⏸' : '▶'}
@@ -142,28 +149,30 @@ export function TransportBar() {
           <button
             type="button"
             onClick={() => next(maxStep)}
-            aria-label="Next step"
+            aria-label="Próximo passo"
             disabled={currentStep >= maxStep}
           >
             ▶
           </button>
-          <button type="button" onClick={() => jumpTo(maxStep)} aria-label="Go to last step">
+          <button type="button" onClick={() => jumpTo(maxStep)} aria-label="Ir para o último passo">
             ⏭
           </button>
-          <button type="button" onClick={reset} aria-label="Reset to first step">
+          <button type="button" onClick={reset} aria-label="Voltar ao primeiro passo">
             ↻
           </button>
         </div>
 
         <div className="transport-scrubber">
-          <span className="transport-label">Step {currentStep + 1} / {steps.length}</span>
+          <span className="transport-label">
+            Passo {currentStep + 1} / {steps.length}
+          </span>
           <input
             type="range"
             min={0}
             max={maxStep}
             value={currentStep}
             onChange={(e) => jumpTo(Number(e.target.value))}
-            aria-label="Step scrubber"
+            aria-label="Barra de passos"
           />
         </div>
       </footer>

@@ -20,7 +20,7 @@ function emptyScene(): Scene {
   const now = Date.now();
   return {
     id: nanoid(),
-    name: 'Untitled',
+    name: 'Sem título',
     parts: [],
     steps: [],
     mode: 'sandbox',
