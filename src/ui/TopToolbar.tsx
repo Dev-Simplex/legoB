@@ -6,6 +6,7 @@ import { writeMpd, readMpd } from '../io/mpdCodec';
 import { downloadText, openFilePicker } from '../io/fileIo';
 import { toast } from './toast';
 import { SavesDialog } from './SavesDialog';
+import { AboutDialog } from './AboutDialog';
 
 export function TopToolbar() {
   const scene = useSceneStore((s) => s.scene);
@@ -18,6 +19,7 @@ export function TopToolbar() {
   const hasSteps = scene.steps.length > 0;
   const partCount = scene.parts.length;
   const [savesOpen, setSavesOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
 
   const handleSave = async () => {
     let name = scene.name;
@@ -149,9 +151,13 @@ export function TopToolbar() {
         <button type="button" onClick={handleClear} aria-label="Clear scene">
           Clear
         </button>
+        <button type="button" onClick={() => setAboutOpen(true)} aria-label="About">
+          About
+        </button>
       </header>
 
       <SavesDialog open={savesOpen} onClose={() => setSavesOpen(false)} />
+      <AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
     </>
   );
 }
