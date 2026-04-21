@@ -27,7 +27,9 @@ function db(): Promise<LegobDb> {
   return dbPromise;
 }
 
-export type SceneSummary = Pick<Scene, 'id' | 'name' | 'updatedAt' | 'thumbnail'>;
+export type SceneSummary = Pick<Scene, 'id' | 'name' | 'updatedAt' | 'thumbnail'> & {
+  partCount: number;
+};
 
 export const sceneRepo = {
   async save(scene: Scene): Promise<void> {
@@ -52,7 +54,13 @@ export const sceneRepo = {
     const conn = await db();
     const all = (await conn.getAll(SCENES)) as Scene[];
     return all
-      .map((s) => ({ id: s.id, name: s.name, updatedAt: s.updatedAt, thumbnail: s.thumbnail }))
+      .map((s) => ({
+        id: s.id,
+        name: s.name,
+        updatedAt: s.updatedAt,
+        thumbnail: s.thumbnail,
+        partCount: s.parts.length,
+      }))
       .sort((a, b) => b.updatedAt - a.updatedAt);
   },
 

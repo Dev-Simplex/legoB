@@ -34,7 +34,7 @@ export function SceneCanvas({ showFps = false, children }: SceneCanvasProps) {
       <Canvas
         camera={{ position: DEFAULT_CAMERA.position, fov: DEFAULT_CAMERA.fov, near: 1, far: 5000 }}
         shadows
-        gl={{ antialias: true }}
+        gl={{ antialias: true, preserveDrawingBuffer: true }}
         aria-label="3D scene. Empty ground plane with grid. Build placement and rendering arrive in later stories."
       >
         <color attach="background" args={['#f1f5f9']} />

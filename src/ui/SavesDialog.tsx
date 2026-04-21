@@ -93,16 +93,36 @@ export function SavesDialog({ open, onClose }: SavesDialogProps) {
             </p>
           )}
           {saves && saves.length > 0 && (
-            <ul className="saves-list">
+            <ul className="saves-grid">
               {saves.map((s) => (
-                <li key={s.id} className={s.id === currentSceneId ? 'current' : ''}>
+                <li
+                  key={s.id}
+                  className={`save-card ${s.id === currentSceneId ? 'current' : ''}`}
+                >
+                  <button
+                    type="button"
+                    className="save-thumb-btn"
+                    onClick={() => handleLoad(s.id)}
+                    aria-label={`Carregar ${s.name}`}
+                  >
+                    {s.thumbnail ? (
+                      <img src={s.thumbnail} alt="" className="save-thumb" />
+                    ) : (
+                      <div className="save-thumb save-thumb-placeholder" aria-hidden>
+                        <span>sem prévia</span>
+                      </div>
+                    )}
+                    {s.id === currentSceneId && <span className="save-badge">atual</span>}
+                  </button>
+
                   <div className="save-info">
-                    <div className="save-name">{s.name}</div>
+                    <div className="save-name" title={s.name}>{s.name}</div>
                     <div className="save-meta">
+                      {s.partCount} {s.partCount === 1 ? 'peça' : 'peças'} ·{' '}
                       {new Date(s.updatedAt).toLocaleString('pt-BR')}
-                      {s.id === currentSceneId && ' · atual'}
                     </div>
                   </div>
+
                   <div className="save-actions">
                     <button type="button" onClick={() => handleLoad(s.id)}>
                       Carregar

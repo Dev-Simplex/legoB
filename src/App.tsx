@@ -10,6 +10,7 @@ import { ToastContainer } from './ui/ToastContainer';
 import { useModeStore } from './state/useModeStore';
 import { useSceneStore } from './state/useSceneStore';
 import { usePlaybackStore } from './state/usePlaybackStore';
+import { useAutoSave } from './state/useAutoSave';
 
 const isDev = import.meta.env.DEV;
 
@@ -18,6 +19,8 @@ export function App() {
   const setMode = useModeStore((s) => s.setMode);
   const hasSteps = useSceneStore((s) => s.scene.steps.length > 0);
   const resetPlayback = usePlaybackStore((s) => s.reset);
+
+  useAutoSave();
 
   // Auto-switch mode when a scene is loaded with steps.
   useEffect(() => {

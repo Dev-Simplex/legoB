@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { nanoid } from 'nanoid';
 import { useSceneStore } from '../state/useSceneStore';
 import { useModeStore } from '../state/useModeStore';
+import { useSettingsStore } from '../state/useSettingsStore';
 import { sceneRepo } from '../io/sceneRepo';
 import { writeMpd, readMpd } from '../io/mpdCodec';
 import { downloadText, openFilePicker } from '../io/fileIo';
+import { captureThumb } from '../io/captureThumb';
 import { toast } from './toast';
 import { SavesDialog } from './SavesDialog';
 import { AboutDialog } from './AboutDialog';
@@ -18,26 +21,63 @@ export function TopToolbar() {
   const markClean = useSceneStore((s) => s.markClean);
   const mode = useModeStore((s) => s.mode);
   const setMode = useModeStore((s) => s.setMode);
+  const autoSave = useSettingsStore((s) => s.autoSave);
+  const setAutoSave = useSettingsStore((s) => s.setAutoSave);
   const hasSteps = scene.steps.length > 0;
   const partCount = scene.parts.length;
   const [savesOpen, setSavesOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
 
+  const persistScene = async (name: string, opts?: { asNew?: boolean }) => {
+    const id = opts?.asNew ? nanoid() : scene.id;
+    const now = Date.now();
+    const createdAt = opts?.asNew ? now : scene.createdAt;
+    const toSave = {
+      ...scene,
+      id,
+      name,
+      createdAt,
+      updatedAt: now,
+      thumbnail: captureThumb() ?? scene.thumbnail ?? null,
+    };
+    await sceneRepo.save(toSave);
+    loadScene(toSave);
+    markClean();
+  };
+
   const handleSave = async () => {
     let name = scene.name;
-    if (name === 'Untitled' || name === UNTITLED) {
+    if (!name || name === UNTITLED) {
       const entered = window.prompt('Nomeie sua criação:', 'Minha construção');
       if (!entered) return;
       name = entered;
     }
     try {
-      await sceneRepo.save({ ...scene, name });
-      loadScene({ ...scene, name });
-      markClean();
+      await persistScene(name);
       toast(`Salvo como "${name}"`, 'success');
     } catch (err) {
       toast(
         err instanceof Error ? `Falha ao salvar: ${err.message}` : 'Falha ao salvar',
+        'error'
+      );
+    }
+  };
+
+  const handleSaveAs = async () => {
+    if (partCount === 0) {
+      toast('Nada para salvar — coloque algumas peças primeiro.', 'info');
+      return;
+    }
+    const suggested =
+      scene.name && scene.name !== UNTITLED ? `${scene.name} (cópia)` : 'Minha construção';
+    const entered = window.prompt('Salvar como nova cópia com o nome:', suggested);
+    if (!entered) return;
+    try {
+      await persistScene(entered, { asNew: true });
+      toast(`Cópia "${entered}" criada`, 'success');
+    } catch (err) {
+      toast(
+        err instanceof Error ? `Falha ao duplicar: ${err.message}` : 'Falha ao duplicar',
         'error'
       );
     }
@@ -110,6 +150,18 @@ export function TopToolbar() {
     }
   };
 
+  const handleToggleAutoSave = () => {
+    const next = !autoSave;
+    setAutoSave(next);
+    if (next && (!scene.name || scene.name === UNTITLED)) {
+      toast('Auto-save ligado — salve a cena com um nome para ativá-lo.', 'info');
+    } else if (next) {
+      toast('Auto-save ligado (a cada 30s).', 'success');
+    } else {
+      toast('Auto-save desligado.', 'info');
+    }
+  };
+
   return (
     <>
       <header className="top-bar">
@@ -145,8 +197,25 @@ export function TopToolbar() {
           {partCount} {partCount === 1 ? 'peça' : 'peças'}
         </span>
         {isDirty && <span className="stat-chip dirty">● não salvo</span>}
+        <button
+          type="button"
+          onClick={handleToggleAutoSave}
+          aria-pressed={autoSave}
+          aria-label={autoSave ? 'Desativar auto-save' : 'Ativar auto-save'}
+          className={`auto-chip ${autoSave ? 'active' : ''}`}
+          title={
+            autoSave
+              ? 'Auto-save ligado: salva a cada 30s quando houver alterações'
+              : 'Auto-save desligado'
+          }
+        >
+          ⚡ Auto-save {autoSave ? 'on' : 'off'}
+        </button>
         <button type="button" onClick={handleSave} aria-label="Salvar cena">
           Salvar
+        </button>
+        <button type="button" onClick={handleSaveAs} aria-label="Salvar como nova cópia">
+          Salvar como…
         </button>
         <button type="button" onClick={() => setSavesOpen(true)} aria-label="Abrir meus salvos">
           Meus salvos
