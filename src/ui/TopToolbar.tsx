@@ -35,6 +35,7 @@ export function TopToolbar() {
   const setMode = useModeStore((s) => s.setMode);
   const autoSave = useSettingsStore((s) => s.autoSave);
   const setAutoSave = useSettingsStore((s) => s.setAutoSave);
+  const lastAutoSaveAt = useSettingsStore((s) => s.lastAutoSaveAt);
   const hasSteps = scene.steps.length > 0;
   const partCount = scene.parts.length;
   const [savesOpen, setSavesOpen] = useState(false);
@@ -201,10 +202,8 @@ export function TopToolbar() {
   const handleToggleAutoSave = () => {
     const next = !autoSave;
     setAutoSave(next);
-    if (next && (!scene.name || scene.name === UNTITLED)) {
-      toast('Auto-save ligado — salve a cena com um nome para ativá-lo.', 'info');
-    } else if (next) {
-      toast('Auto-save ligado (a cada 30s).', 'success');
+    if (next) {
+      toast('Auto-save ligado — salva a cada 10s quando há alterações.', 'success');
     } else {
       toast('Auto-save desligado.', 'info');
     }
@@ -253,7 +252,9 @@ export function TopToolbar() {
           className={`auto-chip ${autoSave ? 'active' : ''}`}
           title={
             autoSave
-              ? 'Auto-save ligado: salva a cada 30s quando houver alterações'
+              ? lastAutoSaveAt > 0
+                ? `Auto-save ligado (10s). Último: ${new Date(lastAutoSaveAt).toLocaleTimeString('pt-BR')}`
+                : 'Auto-save ligado: salva a cada 10s quando houver alterações'
               : 'Auto-save desligado'
           }
         >

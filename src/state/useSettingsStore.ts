@@ -1,11 +1,15 @@
 import { create } from 'zustand';
 
-const STORAGE_KEY = 'legob:settings:v1';
+const STORAGE_KEY = 'legob:settings:v2';
+const DEFAULT_INTERVAL_MS = 10_000;
 
 interface SettingsState {
   autoSave: boolean;
   autoSaveIntervalMs: number;
+  /** Timestamp em ms do último auto-save bem-sucedido. 0 = nunca. */
+  lastAutoSaveAt: number;
   setAutoSave: (enabled: boolean) => void;
+  setLastAutoSaveAt: (ts: number) => void;
 }
 
 function loadPersisted(): Partial<SettingsState> {
@@ -19,7 +23,7 @@ function loadPersisted(): Partial<SettingsState> {
   }
 }
 
-function persist(state: SettingsState) {
+function persist(state: Pick<SettingsState, 'autoSave' | 'autoSaveIntervalMs'>) {
   try {
     localStorage.setItem(
       STORAGE_KEY,
@@ -34,10 +38,14 @@ const persisted = loadPersisted();
 
 export const useSettingsStore = create<SettingsState>((set, get) => ({
   autoSave: persisted.autoSave ?? false,
-  autoSaveIntervalMs: persisted.autoSaveIntervalMs ?? 30_000,
+  autoSaveIntervalMs: persisted.autoSaveIntervalMs ?? DEFAULT_INTERVAL_MS,
+  lastAutoSaveAt: 0,
 
   setAutoSave: (enabled) => {
     set({ autoSave: enabled });
-    persist(get());
+    const state = get();
+    persist({ autoSave: state.autoSave, autoSaveIntervalMs: state.autoSaveIntervalMs });
   },
+
+  setLastAutoSaveAt: (ts) => set({ lastAutoSaveAt: ts }),
 }));
