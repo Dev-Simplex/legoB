@@ -35,6 +35,8 @@ export interface LdrawColor {
 
 export type BrickCategory = 'brick' | 'plate' | 'tile' | 'slope' | 'special' | 'figure';
 
+export type BrickShape = 'box' | 'round' | 'slope' | 'cone' | 'wedge' | 'arch';
+
 export interface PaletteEntry {
   partNumber: string;
   displayName: string;
@@ -53,6 +55,15 @@ export interface PaletteEntry {
    * Whether to render studs on top. Tiles have no studs.
    */
   studded: boolean;
+  /**
+   * Forma geométrica do corpo. Padrão 'box' para tijolos/placas retangulares.
+   * - 'round': cilindro (peça redonda, ex.: tijolo 2x2 round).
+   * - 'slope': rampa trapezoidal (um lado do topo baixa).
+   * - 'cone': cilindro com topo afunilado (domo / cone).
+   * - 'wedge': prisma triangular (placa em forma de cunha).
+   * - 'arch': arco (reservado — não implementado ainda, renderiza como 'box').
+   */
+  shape?: BrickShape;
   defaultColorCode: number;
 }
 

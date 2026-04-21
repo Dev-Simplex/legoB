@@ -10,6 +10,8 @@ const CATEGORIES: Array<{ key: BrickCategory | 'all'; label: string }> = [
   { key: 'brick', label: 'Tijolos' },
   { key: 'plate', label: 'Placas' },
   { key: 'tile', label: 'Lisas' },
+  { key: 'slope', label: 'Rampas' },
+  { key: 'special', label: 'Especiais' },
   { key: 'figure', label: 'Bonecos' },
 ];
 
@@ -45,6 +47,82 @@ function FigureThumb({ bodyColor, robot }: { bodyColor: string; robot: boolean }
       {/* antena robô */}
       {robot && <circle cx="22" cy="1" r="1.5" fill="#EF4444" />}
     </svg>
+  );
+}
+
+function ShapeThumb({
+  shape,
+  widthStuds,
+  depthStuds,
+  heightLdu,
+  color,
+}: {
+  shape: 'box' | 'round' | 'slope' | 'cone' | 'wedge' | 'arch';
+  widthStuds: number;
+  depthStuds: number;
+  heightLdu: number;
+  color: string;
+}) {
+  const w = 14 + Math.min(widthStuds, 4) * 4;
+  const d = 14 + Math.min(depthStuds, 4) * 4;
+  const h = Math.max(6, Math.min(heightLdu / 3, 18));
+
+  if (shape === 'round') {
+    return (
+      <svg viewBox="0 0 44 28" width={36} height={24} aria-hidden>
+        <ellipse cx="22" cy="16" rx={w / 1.5} ry={d / 3} fill={color} stroke="#0f172a22" />
+        <ellipse cx="22" cy="14 - h" rx={w / 1.5} ry={d / 3} fill={color} />
+        <rect x={22 - w / 1.5} y={14 - h / 2} width={(w / 1.5) * 2} height={h} fill={color} />
+      </svg>
+    );
+  }
+
+  if (shape === 'cone') {
+    return (
+      <svg viewBox="0 0 44 28" width={36} height={24} aria-hidden>
+        <polygon
+          points={`${22 - w / 1.8},22 ${22 + w / 1.8},22 ${22 + 2},${22 - h - 4} ${22 - 2},${22 - h - 4}`}
+          fill={color}
+          stroke="#0f172a22"
+        />
+      </svg>
+    );
+  }
+
+  if (shape === 'slope') {
+    return (
+      <svg viewBox="0 0 44 28" width={36} height={24} aria-hidden>
+        <polygon
+          points={`${22 - w / 1.5},22 ${22 + w / 1.5},22 ${22 + w / 1.5},${22 - h} ${22 - w / 1.5},${22 - h / 3}`}
+          fill={color}
+          stroke="#0f172a22"
+        />
+      </svg>
+    );
+  }
+
+  if (shape === 'wedge') {
+    return (
+      <svg viewBox="0 0 44 28" width={36} height={24} aria-hidden>
+        <polygon
+          points={`${22 - w / 1.5},22 ${22 + w / 1.5},22 22,${22 - h - 2}`}
+          fill={color}
+          stroke="#0f172a22"
+        />
+      </svg>
+    );
+  }
+
+  // box default
+  return (
+    <span
+      className="palette-thumb-box"
+      style={{
+        width: `${w}px`,
+        height: `${h}px`,
+        backgroundColor: color,
+      }}
+    />
   );
 }
 
@@ -135,14 +213,12 @@ export function Palette() {
                   robot={p.partNumber === 'FIG02'}
                 />
               ) : (
-                <span
-                  className="palette-thumb-box"
-                  style={{
-                    width: `${12 + p.widthStuds * 6}px`,
-                    height: `${Math.max(6, p.heightLdu / 3)}px`,
-                    backgroundColor:
-                      COLORS.find((c) => c.code === p.defaultColorCode)?.rgb ?? '#cbd5e1',
-                  }}
+                <ShapeThumb
+                  shape={p.shape ?? 'box'}
+                  widthStuds={p.widthStuds}
+                  depthStuds={p.depthStuds}
+                  heightLdu={p.heightLdu}
+                  color={COLORS.find((c) => c.code === p.defaultColorCode)?.rgb ?? '#cbd5e1'}
                 />
               )}
             </span>
