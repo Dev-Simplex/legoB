@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Brick } from './Brick';
+import { Part } from './Part';
 import { useSceneStore } from '../state/useSceneStore';
 import { usePlaybackStore } from '../state/usePlaybackStore';
 
@@ -32,7 +32,7 @@ export function InstructionsScene() {
   return (
     <group>
       {visibleParts.map((part) => (
-        <Brick
+        <Part
           key={part.id}
           partNumber={part.partNumber}
           colorCode={part.colorCode}
@@ -43,7 +43,7 @@ export function InstructionsScene() {
       ))}
 
       {nextStepParts.map((part) => (
-        <Brick
+        <Part
           key={`ghost-${part.id}`}
           partNumber={part.partNumber}
           colorCode={part.colorCode}

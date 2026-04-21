@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { ThreeEvent } from '@react-three/fiber';
 import { useThree } from '@react-three/fiber';
-import { Brick } from './Brick';
+import { Part as PartMesh } from './Part';
 import { useSceneStore } from '../state/useSceneStore';
 import { usePaletteStore } from '../state/usePaletteStore';
 import { computeSnap } from './snap/computeSnap';
@@ -183,7 +183,7 @@ export function SandboxScene() {
       </mesh>
 
       {parts.map((part) => (
-        <Brick
+        <PartMesh
           key={part.id}
           partNumber={part.partNumber}
           colorCode={part.colorCode}
@@ -196,7 +196,7 @@ export function SandboxScene() {
       ))}
 
       {ghost && activePart && (
-        <Brick
+        <PartMesh
           partNumber={activePart.partNumber}
           colorCode={ghost.valid ? activeColorCode : 4}
           position={ghost.position}

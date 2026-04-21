@@ -108,6 +108,28 @@ export const PALETTE: readonly PaletteEntry[] = [
     studded: false,
     defaultColorCode: 72,
   },
+  // Figuras (design próprio — NÃO usa geometria de minifigure LEGO).
+  // Part numbers FIG* são invenção do LegoB.
+  {
+    partNumber: 'FIG01',
+    displayName: 'Boneco',
+    category: 'figure',
+    widthStuds: 2,
+    depthStuds: 1,
+    heightLdu: 96,
+    studded: false,
+    defaultColorCode: 1,
+  },
+  {
+    partNumber: 'FIG02',
+    displayName: 'Boneco Robô',
+    category: 'figure',
+    widthStuds: 2,
+    depthStuds: 1,
+    heightLdu: 96,
+    studded: false,
+    defaultColorCode: 71,
+  },
 ];
 
 export const PALETTE_BY_NUMBER: ReadonlyMap<string, PaletteEntry> = new Map(

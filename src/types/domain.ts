@@ -33,7 +33,7 @@ export interface LdrawColor {
   alpha: number;
 }
 
-export type BrickCategory = 'brick' | 'plate' | 'tile' | 'slope' | 'special';
+export type BrickCategory = 'brick' | 'plate' | 'tile' | 'slope' | 'special' | 'figure';
 
 export interface PaletteEntry {
   partNumber: string;

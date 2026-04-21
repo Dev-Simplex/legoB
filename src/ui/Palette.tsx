@@ -10,7 +10,43 @@ const CATEGORIES: Array<{ key: BrickCategory | 'all'; label: string }> = [
   { key: 'brick', label: 'Tijolos' },
   { key: 'plate', label: 'Placas' },
   { key: 'tile', label: 'Lisas' },
+  { key: 'figure', label: 'Bonecos' },
 ];
+
+function FigureThumb({ bodyColor, robot }: { bodyColor: string; robot: boolean }) {
+  const headFill = robot ? bodyColor : '#F2CD37';
+  return (
+    <svg
+      viewBox="0 0 44 54"
+      width={28}
+      height={36}
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+    >
+      {/* pernas */}
+      <rect x="12" y="34" width="8" height="16" rx="1" fill="#6C6E68" />
+      <rect x="24" y="34" width="8" height="16" rx="1" fill="#6C6E68" />
+      {/* torso */}
+      <rect x="10" y="18" width="24" height="18" rx="2" fill={bodyColor} />
+      {/* braços */}
+      <rect x="4" y="19" width="6" height="14" rx="1" fill={bodyColor} />
+      <rect x="34" y="19" width="6" height="14" rx="1" fill={bodyColor} />
+      {/* pescoço */}
+      <rect x="20" y="14" width="4" height="4" fill={headFill} />
+      {/* cabeça */}
+      {robot ? (
+        <rect x="13" y="2" width="18" height="14" rx="2" fill={headFill} />
+      ) : (
+        <ellipse cx="22" cy="9" rx="9" ry="7" fill={headFill} />
+      )}
+      {/* olhos */}
+      <circle cx="18" cy={robot ? 8 : 9} r="1.2" fill="#0f172a" />
+      <circle cx="26" cy={robot ? 8 : 9} r="1.2" fill="#0f172a" />
+      {/* antena robô */}
+      {robot && <circle cx="22" cy="1" r="1.5" fill="#EF4444" />}
+    </svg>
+  );
+}
 
 export function Palette() {
   const activePartNumber = usePaletteStore((s) => s.activePartNumber);
@@ -76,14 +112,24 @@ export function Palette() {
             title={`${p.partNumber} — ${p.displayName}`}
           >
             <span className="palette-thumb" aria-hidden>
-              <span
-                className="palette-thumb-box"
-                style={{
-                  width: `${12 + p.widthStuds * 6}px`,
-                  height: `${Math.max(6, p.heightLdu / 3)}px`,
-                  backgroundColor: COLORS.find((c) => c.code === p.defaultColorCode)?.rgb ?? '#cbd5e1',
-                }}
-              />
+              {p.category === 'figure' ? (
+                <FigureThumb
+                  bodyColor={
+                    COLORS.find((c) => c.code === p.defaultColorCode)?.rgb ?? '#1E3A8A'
+                  }
+                  robot={p.partNumber === 'FIG02'}
+                />
+              ) : (
+                <span
+                  className="palette-thumb-box"
+                  style={{
+                    width: `${12 + p.widthStuds * 6}px`,
+                    height: `${Math.max(6, p.heightLdu / 3)}px`,
+                    backgroundColor:
+                      COLORS.find((c) => c.code === p.defaultColorCode)?.rgb ?? '#cbd5e1',
+                  }}
+                />
+              )}
             </span>
             <span className="palette-label">{p.displayName}</span>
           </button>
