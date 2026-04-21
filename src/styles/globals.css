@@ -53,14 +53,14 @@ kbd {
 
 .app-shell {
   display: grid;
-  grid-template-rows: 48px 1fr;
+  grid-template-rows: auto 1fr;
   height: 100vh;
   width: 100vw;
 }
 
 .sandbox-layout {
   grid-template-columns: 260px 1fr 280px;
-  grid-template-rows: 48px 1fr;
+  grid-template-rows: auto 1fr;
   grid-template-areas:
     'topbar topbar topbar'
     'palette canvas properties';
@@ -343,9 +343,11 @@ kbd {
 .top-bar {
   grid-area: topbar;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
-  padding: 0 1rem;
+  gap: 8px 12px;
+  padding: 8px 16px;
+  min-height: 48px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
@@ -390,11 +392,24 @@ kbd {
   padding: 6px 12px;
   font-size: 0.75rem;
   color: #0f172a;
+  flex-shrink: 0;
 }
 
 .top-bar button:hover {
   background: var(--surface-2);
   border-color: #cbd5e1;
+}
+
+.toolbar-btn-primary {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.toolbar-btn-primary:hover {
+  background: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
 }
 
 /* Palette */
@@ -960,4 +975,73 @@ kbd {
   background: #eff6ff;
   border-color: var(--primary);
   color: var(--primary);
+}
+
+/* Prompt dialog */
+.prompt-modal {
+  max-width: 440px;
+  min-width: 380px;
+}
+
+.prompt-description {
+  margin-bottom: 12px;
+}
+
+.prompt-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.prompt-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.prompt-actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.prompt-actions button {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface-2);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.prompt-actions button:hover {
+  background: #fff;
+  border-color: #cbd5e1;
+}
+
+.prompt-actions button.primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.prompt-actions button.primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.prompt-actions button.primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.saves-modal {
+  min-width: 720px;
+  max-width: min(90vw, 960px);
+  max-height: 85vh;
 }

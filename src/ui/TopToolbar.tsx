@@ -10,8 +10,20 @@ import { captureThumb } from '../io/captureThumb';
 import { toast } from './toast';
 import { SavesDialog } from './SavesDialog';
 import { AboutDialog } from './AboutDialog';
+import { PromptDialog } from './PromptDialog';
 
 const UNTITLED = 'Sem título';
+
+type PromptPurpose = 'save' | 'save-as';
+
+interface PromptConfig {
+  purpose: PromptPurpose;
+  title: string;
+  description: string;
+  defaultValue: string;
+  placeholder: string;
+  confirmLabel: string;
+}
 
 export function TopToolbar() {
   const scene = useSceneStore((s) => s.scene);
@@ -27,6 +39,7 @@ export function TopToolbar() {
   const partCount = scene.parts.length;
   const [savesOpen, setSavesOpen] = useState(false);
   const [aboutOpen, setAboutOpen] = useState(false);
+  const [prompt, setPrompt] = useState<PromptConfig | null>(null);
 
   const persistScene = async (name: string, opts?: { asNew?: boolean }) => {
     const id = opts?.asNew ? nanoid() : scene.id;
@@ -45,39 +58,71 @@ export function TopToolbar() {
     markClean();
   };
 
-  const handleSave = async () => {
-    let name = scene.name;
-    if (!name || name === UNTITLED) {
-      const entered = window.prompt('Nomeie sua criação:', 'Minha construção');
-      if (!entered) return;
-      name = entered;
+  const handleSave = () => {
+    if (partCount === 0) {
+      toast('Nada para salvar — coloque algumas peças primeiro.', 'info');
+      return;
     }
-    try {
-      await persistScene(name);
-      toast(`Salvo como "${name}"`, 'success');
-    } catch (err) {
-      toast(
-        err instanceof Error ? `Falha ao salvar: ${err.message}` : 'Falha ao salvar',
-        'error'
-      );
+    if (scene.name && scene.name !== UNTITLED) {
+      // Já tem nome: salva direto.
+      void (async () => {
+        try {
+          await persistScene(scene.name);
+          toast(`Salvo como "${scene.name}"`, 'success');
+        } catch (err) {
+          console.error('[LegoB] save failed', err);
+          toast(
+            err instanceof Error ? `Falha ao salvar: ${err.message}` : 'Falha ao salvar',
+            'error'
+          );
+        }
+      })();
+      return;
     }
+    setPrompt({
+      purpose: 'save',
+      title: 'Salvar construção',
+      description: 'Dê um nome para esta criação — você poderá renomear depois.',
+      defaultValue: 'Minha construção',
+      placeholder: 'Ex.: Castelo medieval',
+      confirmLabel: 'Salvar',
+    });
   };
 
-  const handleSaveAs = async () => {
+  const handleSaveAs = () => {
     if (partCount === 0) {
       toast('Nada para salvar — coloque algumas peças primeiro.', 'info');
       return;
     }
     const suggested =
       scene.name && scene.name !== UNTITLED ? `${scene.name} (cópia)` : 'Minha construção';
-    const entered = window.prompt('Salvar como nova cópia com o nome:', suggested);
-    if (!entered) return;
+    setPrompt({
+      purpose: 'save-as',
+      title: 'Salvar como nova cópia',
+      description:
+        'Uma nova cópia independente será criada. O salvo atual permanece intocado.',
+      defaultValue: suggested,
+      placeholder: 'Ex.: Castelo v2',
+      confirmLabel: 'Duplicar',
+    });
+  };
+
+  const handlePromptConfirm = async (name: string) => {
+    const current = prompt;
+    setPrompt(null);
+    if (!current) return;
     try {
-      await persistScene(entered, { asNew: true });
-      toast(`Cópia "${entered}" criada`, 'success');
+      if (current.purpose === 'save') {
+        await persistScene(name);
+        toast(`Salvo como "${name}"`, 'success');
+      } else if (current.purpose === 'save-as') {
+        await persistScene(name, { asNew: true });
+        toast(`Cópia "${name}" criada`, 'success');
+      }
     } catch (err) {
+      console.error('[LegoB] persist failed', err);
       toast(
-        err instanceof Error ? `Falha ao duplicar: ${err.message}` : 'Falha ao duplicar',
+        err instanceof Error ? `Falha ao salvar: ${err.message}` : 'Falha ao salvar',
         'error'
       );
     }
@@ -91,6 +136,7 @@ export function TopToolbar() {
       if (result === 'cancelled') return;
       toast('Arquivo .mpd exportado', 'success');
     } catch (err) {
+      console.error('[LegoB] export failed', err);
       toast(
         err instanceof Error ? `Falha na exportação: ${err.message}` : 'Falha na exportação',
         'error'
@@ -112,6 +158,7 @@ export function TopToolbar() {
         toast(`Importadas ${imported.parts.length} peças de ${fileName}`, 'success');
       }
     } catch (err) {
+      console.error('[LegoB] import failed', err);
       toast(
         err instanceof Error ? `Falha na importação: ${err.message}` : 'Falha na importação',
         'error'
@@ -128,6 +175,7 @@ export function TopToolbar() {
       const text = await res.text();
       loadFromText('little-house-steps.mpd', text);
     } catch (err) {
+      console.error('[LegoB] sample load failed', err);
       toast(
         err instanceof Error
           ? `Falha ao carregar o exemplo: ${err.message}`
@@ -209,36 +257,86 @@ export function TopToolbar() {
               : 'Auto-save desligado'
           }
         >
-          ⚡ Auto-save {autoSave ? 'on' : 'off'}
+          ⚡ {autoSave ? 'Auto on' : 'Auto off'}
         </button>
-        <button type="button" onClick={handleSave} aria-label="Salvar cena">
-          Salvar
+        <button
+          type="button"
+          onClick={handleSave}
+          aria-label="Salvar cena"
+          className="toolbar-btn toolbar-btn-primary"
+        >
+          💾 Salvar
         </button>
-        <button type="button" onClick={handleSaveAs} aria-label="Salvar como nova cópia">
+        <button
+          type="button"
+          onClick={handleSaveAs}
+          aria-label="Salvar como nova cópia"
+          className="toolbar-btn"
+        >
           Salvar como…
         </button>
-        <button type="button" onClick={() => setSavesOpen(true)} aria-label="Abrir meus salvos">
+        <button
+          type="button"
+          onClick={() => setSavesOpen(true)}
+          aria-label="Abrir meus salvos"
+          className="toolbar-btn"
+        >
           Meus salvos
         </button>
-        <button type="button" onClick={handleImport} aria-label="Importar arquivo .mpd">
+        <button
+          type="button"
+          onClick={handleImport}
+          aria-label="Importar arquivo .mpd"
+          className="toolbar-btn"
+        >
           Abrir
         </button>
-        <button type="button" onClick={handleLoadSample} aria-label="Carregar exemplo incluído">
+        <button
+          type="button"
+          onClick={handleLoadSample}
+          aria-label="Carregar exemplo incluído"
+          className="toolbar-btn"
+        >
           Exemplo
         </button>
-        <button type="button" onClick={handleExport} aria-label="Exportar como .mpd">
+        <button
+          type="button"
+          onClick={handleExport}
+          aria-label="Exportar como .mpd"
+          className="toolbar-btn"
+        >
           Exportar
         </button>
-        <button type="button" onClick={handleClear} aria-label="Limpar cena">
+        <button
+          type="button"
+          onClick={handleClear}
+          aria-label="Limpar cena"
+          className="toolbar-btn"
+        >
           Limpar
         </button>
-        <button type="button" onClick={() => setAboutOpen(true)} aria-label="Sobre">
+        <button
+          type="button"
+          onClick={() => setAboutOpen(true)}
+          aria-label="Sobre"
+          className="toolbar-btn"
+        >
           Sobre
         </button>
       </header>
 
       <SavesDialog open={savesOpen} onClose={() => setSavesOpen(false)} />
       <AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <PromptDialog
+        open={prompt !== null}
+        title={prompt?.title ?? ''}
+        description={prompt?.description ?? ''}
+        defaultValue={prompt?.defaultValue ?? ''}
+        placeholder={prompt?.placeholder ?? ''}
+        confirmLabel={prompt?.confirmLabel ?? 'Confirmar'}
+        onConfirm={handlePromptConfirm}
+        onCancel={() => setPrompt(null)}
+      />
     </>
   );
 }
