@@ -3,7 +3,7 @@ import { SceneCanvas } from './scene/SceneCanvas';
 import { SandboxScene } from './scene/SandboxScene';
 import { InstructionsScene } from './scene/InstructionsScene';
 import { Palette } from './ui/Palette';
-import { PropertiesPanel } from './ui/PropertiesPanel';
+import { SelectionIndicator } from './ui/SelectionIndicator';
 import { TopToolbar } from './ui/TopToolbar';
 import { TransportBar } from './ui/TransportBar';
 import { ToastContainer } from './ui/ToastContainer';
@@ -22,7 +22,6 @@ export function App() {
 
   useAutoSave();
 
-  // Auto-switch mode when a scene is loaded with steps.
   useEffect(() => {
     if (hasSteps) {
       setMode('instructions');
@@ -42,7 +41,7 @@ export function App() {
         {isInstructions ? <InstructionsScene /> : <SandboxScene />}
       </SceneCanvas>
 
-      {!isInstructions && <PropertiesPanel />}
+      {!isInstructions && <SelectionIndicator />}
       {isInstructions && <TransportBar />}
 
       <ToastContainer />

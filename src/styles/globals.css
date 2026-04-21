@@ -59,11 +59,11 @@ kbd {
 }
 
 .sandbox-layout {
-  grid-template-columns: 260px 1fr 280px;
+  grid-template-columns: 260px 1fr;
   grid-template-rows: auto 1fr;
   grid-template-areas:
-    'topbar topbar topbar'
-    'palette canvas properties';
+    'topbar topbar'
+    'palette canvas';
 }
 
 .instructions-mode {
@@ -597,105 +597,115 @@ kbd {
   border-color: #cbd5e1;
 }
 
-/* Properties panel */
-.properties-panel {
-  grid-area: properties;
-  background: var(--surface);
-  border-left: 1px solid var(--border);
-  padding: 16px;
-  overflow-y: auto;
-}
-
-.properties-panel header {
-  margin-bottom: 14px;
-}
-
-.properties-panel h2 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 4px;
-}
-
-.part-number {
-  font-family: ui-monospace, Menlo, Consolas, monospace;
-  font-size: 0.75rem;
-  color: var(--muted);
-}
-
-.prop-list {
-  margin: 0 0 16px;
-  padding: 0;
-  display: grid;
-  gap: 8px;
-  font-size: 0.8rem;
-}
-
-.prop-list div {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.prop-list dt {
-  color: var(--muted);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.prop-list dd {
-  margin: 0;
-  font-family: ui-monospace, Menlo, Consolas, monospace;
-  font-size: 0.75rem;
-}
-
-.prop-actions {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 16px;
-}
-
-.prop-actions button {
-  flex: 1;
-  padding: 6px 10px;
-  background: var(--surface-2);
+/* Selection indicator — barra flutuante que substitui o painel lateral direito */
+.selection-indicator {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.98);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 0.75rem;
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  z-index: 20;
+  max-width: calc(100% - 32px);
+  backdrop-filter: blur(8px);
+  animation: selection-in 160ms ease-out;
 }
 
-.prop-actions button:hover {
+@keyframes selection-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.selection-swatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.selection-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.selection-info strong {
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.selection-meta {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+
+.selection-actions {
+  display: flex;
+  gap: 4px;
+  border-left: 1px solid var(--border);
+  padding-left: 10px;
+  margin-left: 4px;
+}
+
+.selection-actions button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  border-radius: 6px;
+  font-size: 1rem;
+  color: #0f172a;
+  cursor: pointer;
+  padding: 0;
+}
+
+.selection-actions button:hover {
   background: #fff;
   border-color: #cbd5e1;
 }
 
-.prop-actions button.destructive {
+.selection-actions button.destructive {
   color: #b91c1c;
   border-color: #fecaca;
   background: #fef2f2;
 }
 
-.prop-actions button.destructive:hover {
+.selection-actions button.destructive:hover {
   background: #fee2e2;
   border-color: #fca5a5;
 }
 
-.prop-colors h3 {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 0 0 8px;
-  letter-spacing: 0.04em;
-}
-
-.keyboard-hint {
-  margin-top: 16px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
+.selection-hint {
   font-size: 0.7rem;
   color: var(--muted);
-  line-height: 1.8;
+  padding-left: 10px;
+  border-left: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .selection-hint {
+    display: none;
+  }
 }
 
 /* Toasts */
