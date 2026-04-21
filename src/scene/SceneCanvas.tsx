@@ -2,7 +2,23 @@ import { Suspense, useRef, useState, useCallback } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stats, Grid } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import { MOUSE, TOUCH } from 'three';
 import { Ground } from './Ground';
+import { usePaletteStore } from '../state/usePaletteStore';
+
+// Esquema: botão esquerdo fica LIVRE para placement/selection (a roda
+// da raycasting do R3F cuida dos cliques); botão do meio (roda) orbita;
+// botão direito faz pan. Toque mantém 1-dedo = rotate, 2-dedos = pan.
+const MOUSE_BUTTONS = {
+  LEFT: -1 as unknown as MOUSE,
+  MIDDLE: MOUSE.ROTATE,
+  RIGHT: MOUSE.PAN,
+};
+
+const TOUCH_MODES = {
+  ONE: TOUCH.ROTATE,
+  TWO: TOUCH.DOLLY_PAN,
+};
 
 const DEFAULT_CAMERA = {
   position: [240, 180, 240] as [number, number, number],
@@ -17,6 +33,7 @@ interface SceneCanvasProps {
 export function SceneCanvas({ showFps = false, children }: SceneCanvasProps) {
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
   const [resetToken, setResetToken] = useState(0);
+  const eraserMode = usePaletteStore((s) => s.eraserMode);
 
   const handleReset = useCallback(() => {
     controlsRef.current?.reset();
@@ -24,10 +41,16 @@ export function SceneCanvas({ showFps = false, children }: SceneCanvasProps) {
   }, []);
 
   return (
-    <div className="scene-canvas">
+    <div className={`scene-canvas ${eraserMode ? 'eraser-mode' : ''}`}>
       <div className="scene-toolbar">
-        <button type="button" onClick={handleReset} aria-label="Reset camera">
-          Reset camera
+        <span
+          className="scene-hint"
+          title="Clique e arraste com o botão do meio (scroll) para orbitar. Botão direito para mover. Roda para zoom."
+        >
+          🖱️ meio = orbitar · direito = mover · roda = zoom
+        </span>
+        <button type="button" onClick={handleReset} aria-label="Centralizar câmera">
+          Centralizar câmera
         </button>
       </div>
 
@@ -73,6 +96,8 @@ export function SceneCanvas({ showFps = false, children }: SceneCanvasProps) {
           minDistance={40}
           maxDistance={1500}
           target={[0, 0, 0]}
+          mouseButtons={MOUSE_BUTTONS}
+          touches={TOUCH_MODES}
         />
 
         {showFps && <Stats />}

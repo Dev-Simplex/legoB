@@ -450,6 +450,35 @@ kbd {
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
 }
 
+.palette-modes {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.palette-mode {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #0f172a;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.palette-mode:hover {
+  background: #fff;
+  border-color: #cbd5e1;
+}
+
+.palette-mode.active {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #b91c1c;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15) inset;
+}
+
 .palette-categories {
   display: flex;
   gap: 4px;
@@ -573,13 +602,30 @@ kbd {
   background: #f1f5f9;
 }
 
+.scene-canvas.eraser-mode canvas {
+  cursor: crosshair;
+}
+
 .scene-toolbar {
   position: absolute;
   top: 12px;
   right: 12px;
   z-index: 10;
   display: flex;
+  align-items: center;
   gap: 8px;
+}
+
+.scene-hint {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  color: var(--muted);
+  backdrop-filter: blur(4px);
+  user-select: none;
+  cursor: default;
 }
 
 .scene-toolbar button {

@@ -7,11 +7,15 @@ interface PaletteState {
   activeColorCode: number;
   searchQuery: string;
   category: BrickCategory | 'all';
+  /** Quando true, clicar numa peça colocada a apaga. Desliga ao colocar uma peça nova. */
+  eraserMode: boolean;
 
   setActivePart: (partNumber: string | null) => void;
   setActiveColor: (code: number) => void;
   setSearch: (query: string) => void;
   setCategory: (category: BrickCategory | 'all') => void;
+  setEraserMode: (on: boolean) => void;
+  toggleEraserMode: () => void;
 }
 
 export const usePaletteStore = create<PaletteState>((set) => ({
@@ -19,17 +23,26 @@ export const usePaletteStore = create<PaletteState>((set) => ({
   activeColorCode: PALETTE[0]?.defaultColorCode ?? 15,
   searchQuery: '',
   category: 'all',
+  eraserMode: false,
 
   setActivePart: (partNumber) =>
     set(() => ({
       activePartNumber: partNumber,
-      // When switching palette entry, seed the active color from the entry's default
-      // unless the user has explicitly set a color.
-      activeColorCode: partNumber
-        ? (getPalette(partNumber).defaultColorCode ?? 15)
-        : 15,
+      eraserMode: false, // selecionar peça desliga a borracha
+      activeColorCode: partNumber ? (getPalette(partNumber).defaultColorCode ?? 15) : 15,
     })),
   setActiveColor: (code) => set({ activeColorCode: code }),
   setSearch: (query) => set({ searchQuery: query }),
   setCategory: (category) => set({ category }),
+  setEraserMode: (on) =>
+    set(() => ({
+      eraserMode: on,
+      // Ligar a borracha desliga a peça ativa (não faz sentido colocar + apagar ao mesmo tempo)
+      activePartNumber: on ? null : PALETTE[0]?.partNumber ?? null,
+    })),
+  toggleEraserMode: () =>
+    set((state) => ({
+      eraserMode: !state.eraserMode,
+      activePartNumber: !state.eraserMode ? null : PALETTE[0]?.partNumber ?? null,
+    })),
 }));

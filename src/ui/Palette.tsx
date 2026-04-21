@@ -53,10 +53,12 @@ export function Palette() {
   const activeColorCode = usePaletteStore((s) => s.activeColorCode);
   const searchQuery = usePaletteStore((s) => s.searchQuery);
   const category = usePaletteStore((s) => s.category);
+  const eraserMode = usePaletteStore((s) => s.eraserMode);
   const setActivePart = usePaletteStore((s) => s.setActivePart);
   const setActiveColor = usePaletteStore((s) => s.setActiveColor);
   const setSearch = usePaletteStore((s) => s.setSearch);
   const setCategory = usePaletteStore((s) => s.setCategory);
+  const toggleEraserMode = usePaletteStore((s) => s.toggleEraserMode);
   const selectedPart = useSceneStore((s) => {
     const id = s.selectedPartId;
     return id ? s.scene.parts.find((p) => p.id === id) ?? null : null;
@@ -83,6 +85,19 @@ export function Palette() {
           onChange={(e) => setSearch(e.target.value)}
           aria-label="Buscar peças"
         />
+      </div>
+
+      <div className="palette-modes">
+        <button
+          type="button"
+          className={`palette-mode ${eraserMode ? 'active' : ''}`}
+          onClick={toggleEraserMode}
+          aria-pressed={eraserMode}
+          aria-label={eraserMode ? 'Desligar borracha' : 'Ligar borracha para apagar peças'}
+          title="Modo borracha — clique numa peça da cena para apagá-la"
+        >
+          {eraserMode ? '⌫ Borracha ligada' : '⌫ Borracha'}
+        </button>
       </div>
 
       <div className="palette-categories" role="tablist">

@@ -34,6 +34,8 @@ export function SandboxScene() {
   const activePartNumber = usePaletteStore((s) => s.activePartNumber);
   const activeColorCode = usePaletteStore((s) => s.activeColorCode);
   const setActivePart = usePaletteStore((s) => s.setActivePart);
+  const eraserMode = usePaletteStore((s) => s.eraserMode);
+  const setEraserMode = usePaletteStore((s) => s.setEraserMode);
 
   const [ghost, setGhost] = useState<GhostState | null>(null);
 
@@ -57,6 +59,7 @@ export function SandboxScene() {
       if (event.key === 'Escape') {
         selectPart(null);
         setActivePart(null);
+        setEraserMode(false);
         return;
       }
       if (!selectedPartId) return;
@@ -81,11 +84,11 @@ export function SandboxScene() {
     window.addEventListener('keydown', handler);
     domEl.setAttribute('tabindex', '0');
     return () => window.removeEventListener('keydown', handler);
-  }, [gl, selectedPartId, parts, updatePart, removePart, selectPart, setActivePart]);
+  }, [gl, selectedPartId, parts, updatePart, removePart, selectPart, setActivePart, setEraserMode]);
 
   const recomputeGhost = useCallback(
     (worldX: number, worldY: number, worldZ: number, hoveredPart: Part | null) => {
-      if (!activePart) {
+      if (!activePart || eraserMode) {
         setGhost(null);
         return;
       }
@@ -106,7 +109,7 @@ export function SandboxScene() {
         });
       }
     },
-    [activePart, parts]
+    [activePart, eraserMode, parts]
   );
 
   const handleGroundPointerMove = useCallback(
@@ -151,7 +154,22 @@ export function SandboxScene() {
   const handleBrickClick = useCallback(
     (part: Part) => (event: ThreeEvent<MouseEvent>) => {
       event.stopPropagation();
-      if (event.button === 2) return;
+
+      // Modo borracha: qualquer clique numa peça a apaga.
+      if (eraserMode) {
+        removePart(part.id);
+        return;
+      }
+
+      // Botão direito: sempre seleciona (atalho para quando há peça ativa
+      // na paleta e o usuário quer selecionar sem colocar em cima).
+      if (event.button === 2) {
+        event.nativeEvent.preventDefault();
+        selectPart(part.id);
+        return;
+      }
+
+      // Esquerdo com peça ativa + ghost válido: coloca em cima.
       if (activePart && ghost && ghost.valid) {
         addPart({
           partNumber: activePart.partNumber,
@@ -162,9 +180,11 @@ export function SandboxScene() {
         });
         return;
       }
+
+      // Esquerdo sem peça ativa: seleciona.
       selectPart(part.id);
     },
-    [activePart, ghost, addPart, activeColorCode, selectPart]
+    [eraserMode, removePart, activePart, ghost, addPart, activeColorCode, selectPart]
   );
 
   return (
