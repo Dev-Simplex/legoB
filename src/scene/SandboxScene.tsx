@@ -126,7 +126,9 @@ export function SandboxScene() {
 
   const handleGroundClick = useCallback(
     (event: ThreeEvent<MouseEvent>) => {
-      if (event.button === 2) return;
+      // Só reage ao botão esquerdo. Middle=orbit, right=pan — não devem
+      // colocar peças nem desselecionar.
+      if (event.button !== 0) return;
       if (!activePart || !ghost || !ghost.valid) {
         selectPart(null);
         return;
@@ -153,10 +155,15 @@ export function SandboxScene() {
 
   const handleBrickClick = useCallback(
     (part: Part) => (event: ThreeEvent<MouseEvent>) => {
+      // Ignora botão do meio (orbit) e qualquer coisa que não seja esquerdo
+      // nem direito. Evita que o click de início do orbit/pan adicione ou
+      // apague peças sem querer.
+      if (event.button !== 0 && event.button !== 2) return;
+
       event.stopPropagation();
 
-      // Modo borracha: qualquer clique numa peça a apaga.
-      if (eraserMode) {
+      // Modo borracha: clique esquerdo numa peça a apaga.
+      if (eraserMode && event.button === 0) {
         removePart(part.id);
         return;
       }
@@ -211,7 +218,8 @@ export function SandboxScene() {
           rotationY={part.rotationY}
           selected={part.id === selectedPartId}
           onPointerOver={handleBrickPointerOver(part)}
-          onPointerDown={handleBrickClick(part)}
+          onClick={handleBrickClick(part)}
+          onContextMenu={handleBrickClick(part)}
         />
       ))}
 

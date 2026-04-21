@@ -10,6 +10,8 @@ export interface PartProps {
   colorCode: number;
   position: readonly [number, number, number];
   rotationY?: 0 | 90 | 180 | 270;
+  onClick?: (event: ThreeEvent<MouseEvent>) => void;
+  onContextMenu?: (event: ThreeEvent<MouseEvent>) => void;
   onPointerDown?: PartPointerHandler;
   onPointerOver?: PartPointerHandler;
   onPointerOut?: PartPointerHandler;

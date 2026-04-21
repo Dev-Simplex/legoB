@@ -12,6 +12,8 @@ export interface FigureProps {
   colorCode: number;
   position: readonly [number, number, number];
   rotationY?: 0 | 90 | 180 | 270;
+  onClick?: (event: ThreeEvent<MouseEvent>) => void;
+  onContextMenu?: (event: ThreeEvent<MouseEvent>) => void;
   onPointerDown?: FigurePointerHandler;
   onPointerOver?: FigurePointerHandler;
   onPointerOut?: FigurePointerHandler;
@@ -39,6 +41,8 @@ export function Figure({
   colorCode,
   position,
   rotationY = 0,
+  onClick,
+  onContextMenu,
   onPointerDown,
   onPointerOver,
   onPointerOut,
@@ -95,6 +99,8 @@ export function Figure({
     <group
       position={[position[0], position[1], position[2]]}
       rotation={[0, rotationRadians, 0]}
+      onClick={onClick}
+      onContextMenu={onContextMenu}
       onPointerDown={onPointerDown}
       onPointerOver={onPointerOver}
       onPointerOut={onPointerOut}

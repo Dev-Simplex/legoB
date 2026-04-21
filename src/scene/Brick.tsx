@@ -17,6 +17,8 @@ export interface BrickProps {
   /** Position in LDU. Y is the brick's bottom. */
   position: readonly [number, number, number];
   rotationY?: 0 | 90 | 180 | 270;
+  onClick?: (event: ThreeEvent<MouseEvent>) => void;
+  onContextMenu?: (event: ThreeEvent<MouseEvent>) => void;
   onPointerDown?: BrickPointerHandler;
   onPointerOver?: BrickPointerHandler;
   onPointerOut?: BrickPointerHandler;
@@ -41,6 +43,8 @@ export function Brick({
   colorCode,
   position,
   rotationY = 0,
+  onClick,
+  onContextMenu,
   onPointerDown,
   onPointerOver,
   onPointerOut,
@@ -83,6 +87,8 @@ export function Brick({
     <group
       position={[position[0], position[1], position[2]]}
       rotation={[0, rotationRadians, 0]}
+      onClick={onClick}
+      onContextMenu={onContextMenu}
       onPointerDown={onPointerDown}
       onPointerOver={onPointerOver}
       onPointerOut={onPointerOut}
