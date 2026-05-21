@@ -7,6 +7,7 @@ import { SelectionIndicator } from './ui/SelectionIndicator';
 import { TopToolbar } from './ui/TopToolbar';
 import { TransportBar } from './ui/TransportBar';
 import { ToastContainer } from './ui/ToastContainer';
+import { Footer } from './ui/Footer';
 import { useModeStore } from './state/useModeStore';
 import { useSceneStore } from './state/useSceneStore';
 import { usePlaybackStore } from './state/usePlaybackStore';
@@ -43,6 +44,8 @@ export function App() {
 
       {!isInstructions && <SelectionIndicator />}
       {isInstructions && <TransportBar />}
+
+      <Footer />
 
       <ToastContainer />
     </div>

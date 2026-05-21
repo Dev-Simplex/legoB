@@ -53,26 +53,28 @@ kbd {
 
 .app-shell {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
   height: 100vh;
   width: 100vw;
 }
 
 .sandbox-layout {
   grid-template-columns: 260px 1fr;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
   grid-template-areas:
     'topbar topbar'
-    'palette canvas';
+    'palette canvas'
+    'footer footer';
 }
 
 .instructions-mode {
   grid-template-columns: 1fr 300px;
-  grid-template-rows: 48px 1fr 72px;
+  grid-template-rows: auto 1fr 72px auto;
   grid-template-areas:
     'topbar topbar'
     'canvas instructions'
-    'transport instructions';
+    'transport instructions'
+    'footer footer';
 }
 
 .instructions-layout {
@@ -340,6 +342,95 @@ kbd {
   color: var(--muted);
 }
 
+.about-credits {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 8px 0 4px;
+}
+
+.about-credit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+
+/* Card SPX precisa fundo escuro porque o SVG tem letras brancas. */
+.about-credit--spx {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #cbd5e1;
+}
+
+.about-credit--spx .about-credit-text span {
+  color: #94a3b8;
+}
+
+.about-credit--spx .about-credit-text strong a {
+  color: #fff;
+}
+
+.about-credit--spx .about-credit-text strong a:hover {
+  color: #67e8f9;
+  text-decoration: underline;
+}
+
+.about-credit-logo {
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.about-credit-logo--gradusvita {
+  height: 40px;
+  width: auto;
+  max-width: 90px;
+}
+
+.about-credit-logo--spx {
+  height: 28px;
+  width: auto;
+}
+
+.about-credit-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.about-credit-text strong {
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.about-credit-text strong a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.about-credit-text strong a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.about-credit-text span {
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 540px) {
+  .about-credits {
+    grid-template-columns: 1fr;
+  }
+}
+
 .top-bar {
   grid-area: topbar;
   display: flex;
@@ -356,6 +447,21 @@ kbd {
   font-size: 1.125rem;
   font-weight: 700;
   margin: 0;
+}
+
+.top-bar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.top-bar-logo {
+  display: block;
+  height: 56px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
 }
 
 .top-bar .status {
@@ -1144,4 +1250,91 @@ kbd {
   min-width: 720px;
   max-width: min(90vw, 960px);
   max-height: 85vh;
+}
+
+/* Footer — créditos SPXIA (dev) + Gradus Vita (apoio) */
+.app-footer {
+  grid-area: footer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 16px;
+  min-height: 52px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.app-footer-left,
+.app-footer-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.app-footer-logo {
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.app-footer-logo--gradusvita {
+  height: 36px;
+  width: auto;
+  max-width: 130px;
+}
+
+.app-footer-logo--spx {
+  height: 22px;
+  width: auto;
+}
+
+.app-footer-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-footer-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.app-footer-link:hover {
+  text-decoration: underline;
+}
+
+/* Wrapper escuro porque o SVG da SPXIA tem letras brancas. */
+.app-footer-spx-wrap {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  background: #0f172a;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+
+.app-footer-spx-wrap:hover {
+  opacity: 0.85;
+}
+
+.app-footer-support-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .app-footer-text,
+  .app-footer-support-label {
+    display: none;
+  }
 }

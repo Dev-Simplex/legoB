@@ -32,6 +32,36 @@ export function AboutDialog({ open, onClose }: AboutDialogProps) {
             guardadas apenas neste dispositivo.
           </p>
 
+          <h3>Créditos</h3>
+          <div className="about-credits">
+            <div className="about-credit about-credit--spx">
+              <img
+                src="/branding/logo-spx.svg"
+                alt="SPXIA"
+                className="about-credit-logo about-credit-logo--spx"
+              />
+              <div className="about-credit-text">
+                <strong>
+                  <a href="https://spx.ia.br" target="_blank" rel="noreferrer">
+                    SPXIA
+                  </a>
+                </strong>
+                <span>Desenvolvedora do software e da tecnologia</span>
+              </div>
+            </div>
+            <div className="about-credit">
+              <img
+                src="/branding/logo-gradusvita.png"
+                alt="Gradus Vita"
+                className="about-credit-logo about-credit-logo--gradusvita"
+              />
+              <div className="about-credit-text">
+                <strong>Gradus Vita</strong>
+                <span>Apoiadora</span>
+              </div>
+            </div>
+          </div>
+
           <h3>Atalhos de teclado</h3>
           <dl className="shortcut-list">
             <dt><kbd>Esc</kbd></dt>

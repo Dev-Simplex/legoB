@@ -212,7 +212,13 @@ export function TopToolbar() {
   return (
     <>
       <header className="top-bar">
-        <h1>LegoB</h1>
+        <div className="top-bar-brand">
+          <img
+            src="/branding/logo-gradusvita.png"
+            alt="Gradus Vita"
+            className="top-bar-logo"
+          />
+        </div>
         <div className="mode-toggle" role="tablist" aria-label="Modo">
           <button
             type="button"
