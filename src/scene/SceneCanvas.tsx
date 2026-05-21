@@ -5,6 +5,7 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { MOUSE, TOUCH } from 'three';
 import { Ground } from './Ground';
 import { usePaletteStore } from '../state/usePaletteStore';
+import { useSettingsStore } from '../state/useSettingsStore';
 
 // Esquema: botão esquerdo fica LIVRE para placement/selection (a roda
 // da raycasting do R3F cuida dos cliques); botão do meio (roda) orbita;
@@ -34,6 +35,9 @@ export function SceneCanvas({ showFps = false, children }: SceneCanvasProps) {
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
   const [resetToken, setResetToken] = useState(0);
   const eraserMode = usePaletteStore((s) => s.eraserMode);
+  const groundColor = useSettingsStore((s) => s.groundColor);
+  const setGroundColor = useSettingsStore((s) => s.setGroundColor);
+  const resetGroundColor = useSettingsStore((s) => s.resetGroundColor);
 
   const handleReset = useCallback(() => {
     controlsRef.current?.reset();
@@ -49,6 +53,23 @@ export function SceneCanvas({ showFps = false, children }: SceneCanvasProps) {
         >
           🖱️ meio = orbitar · direito = mover · roda = zoom
         </span>
+        <label
+          className="ground-color-picker"
+          title="Cor da base. Clique direito para restaurar o padrão."
+          onContextMenu={(e) => {
+            e.preventDefault();
+            resetGroundColor();
+          }}
+        >
+          <span className="ground-color-swatch" style={{ background: groundColor }} aria-hidden />
+          <span className="ground-color-label">Base</span>
+          <input
+            type="color"
+            value={groundColor}
+            onChange={(e) => setGroundColor(e.target.value)}
+            aria-label="Selecionar cor da base"
+          />
+        </label>
         <button type="button" onClick={handleReset} aria-label="Centralizar câmera">
           Centralizar câmera
         </button>

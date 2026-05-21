@@ -1,6 +1,8 @@
 import * as THREE from 'three';
+import { useSettingsStore } from '../state/useSettingsStore';
 
 export function Ground() {
+  const groundColor = useSettingsStore((s) => s.groundColor);
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
@@ -9,7 +11,7 @@ export function Ground() {
       name="ground-plane"
     >
       <planeGeometry args={[2000, 2000]} />
-      <meshStandardMaterial color="#e2e8f0" side={THREE.DoubleSide} />
+      <meshStandardMaterial color={groundColor} side={THREE.DoubleSide} />
     </mesh>
   );
 }

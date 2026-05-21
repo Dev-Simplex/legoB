@@ -61,7 +61,7 @@ export function Figure({
   const outlineMaterial = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
-        color: selected ? '#2563eb' : '#0f172a',
+        color: selected ? '#0891b2' : '#0f172a',
         transparent: true,
         opacity: selected ? 0.9 : 0.0,
         side: THREE.BackSide,
